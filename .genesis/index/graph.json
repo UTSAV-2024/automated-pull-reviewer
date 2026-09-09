@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "automated-pull-reviewer",
-  "revision": "63ea2a08abbf3a66ceaa806f04747bdf369cab6f",
-  "sourceHash": "0066d560baf81f6b1e4ddf15d4f40e5c194d05a41d30e4e5a66fff24ed6073d7",
+  "revision": "488e78f4632c51c2e6c2d26a084b00cc767cb285",
+  "sourceHash": "215a0a3cf2e72ebd738fbdae2939f3560752eb287e92b8be01c7eb673429941b",
   "provenance": {
     "tool": "genesis-graphizer",
     "method": "static-analysis",
@@ -237,7 +237,7 @@
       "language": "python",
       "confidence": 1,
       "extractor": "filesystem",
-      "contentHash": "43230da30477a5ea5e44210981930b4863896a4e0359986c727af6cbda2f8966"
+      "contentHash": "08a93d7c7792409cfff0f2600b35b492758c3b802886833855301620730791eb"
     },
     {
       "id": "file:app/pipeline.py",
@@ -297,7 +297,7 @@
       "language": "python",
       "confidence": 1,
       "extractor": "filesystem",
-      "contentHash": "6802679f5f842abab0b864f11332c1b245e130c8090e5913efe7713601a0b263"
+      "contentHash": "524ddfc8176617e70d5f9e6f1c05d2591daf826d8ce9ee8f1b62f3bb7f21d752"
     },
     {
       "id": "file:core/disputes.py",
@@ -4711,7 +4711,7 @@
       "name": "_dispatch",
       "label": "_dispatch",
       "path": "app/main.py",
-      "line": 17,
+      "line": 21,
       "confidence": 1,
       "extractor": "python-stdlib-ast",
       "contentHash": "54801eea82a6eeaf94082b3b3f5ca43f90c45226aeb7d80777afdd11b9bc4628"
@@ -4723,7 +4723,7 @@
       "name": "health",
       "label": "health",
       "path": "app/main.py",
-      "line": 33,
+      "line": 37,
       "confidence": 1,
       "extractor": "python-stdlib-ast",
       "contentHash": "8b93f0902bc97f05828768c570a1a00ed6bd579883cea93aacf0c30ff92a4ee1"
@@ -4735,7 +4735,7 @@
       "name": "lifespan",
       "label": "lifespan",
       "path": "app/main.py",
-      "line": 22,
+      "line": 26,
       "confidence": 1,
       "extractor": "python-stdlib-ast",
       "contentHash": "30af78d2778cb794bfea392c7b13461c0432364b093eb379eb8e78ae1278fff1"
@@ -4915,7 +4915,7 @@
       "name": "WorkerSettings",
       "label": "WorkerSettings",
       "path": "app/worker.py",
-      "line": 10,
+      "line": 13,
       "confidence": 1,
       "extractor": "python-stdlib-ast",
       "contentHash": "be8892248ac28ad2bfbd1d673df08d47d86ed08751b98ae2d8c2ab3e12b7991a"
@@ -10680,6 +10680,32 @@
     {
       "type": "calls",
       "source": "symbol:agents/base.py#function:SpecialistAgent.run",
+      "target": "symbol:app/pipeline.py#function:_build_specialists.llm_call",
+      "tier": "ambiguous",
+      "candidates": [
+        "symbol:app/pipeline.py#function:_build_specialists.llm_call",
+        "symbol:tests/test_specialist_agents.py#function:make_deps.llm_call"
+      ],
+      "resolved": false,
+      "confidence": 0.3,
+      "extractor": "python-stdlib-ast-calls"
+    },
+    {
+      "type": "calls",
+      "source": "symbol:agents/base.py#function:SpecialistAgent.run",
+      "target": "symbol:app/pipeline.py#function:_build_specialists.retrieve",
+      "tier": "ambiguous",
+      "candidates": [
+        "symbol:app/pipeline.py#function:_build_specialists.retrieve",
+        "symbol:tests/test_specialist_agents.py#function:make_deps.retrieve"
+      ],
+      "resolved": false,
+      "confidence": 0.3,
+      "extractor": "python-stdlib-ast-calls"
+    },
+    {
+      "type": "calls",
+      "source": "symbol:agents/base.py#function:SpecialistAgent.run",
       "target": "symbol:observability/events.py#function:log_event",
       "tier": "ambiguous",
       "candidates": [
@@ -10697,32 +10723,6 @@
       "tier": "ambiguous",
       "candidates": [
         "symbol:tests/test_specialist_agents.py#function:make_deps.budget_check"
-      ],
-      "resolved": false,
-      "confidence": 0.3,
-      "extractor": "python-stdlib-ast-calls"
-    },
-    {
-      "type": "calls",
-      "source": "symbol:agents/base.py#function:SpecialistAgent.run",
-      "target": "symbol:tests/test_specialist_agents.py#function:make_deps.llm_call",
-      "tier": "ambiguous",
-      "candidates": [
-        "symbol:tests/test_specialist_agents.py#function:make_deps.llm_call",
-        "symbol:app/pipeline.py#function:_build_specialists.llm_call"
-      ],
-      "resolved": false,
-      "confidence": 0.3,
-      "extractor": "python-stdlib-ast-calls"
-    },
-    {
-      "type": "calls",
-      "source": "symbol:agents/base.py#function:SpecialistAgent.run",
-      "target": "symbol:tests/test_specialist_agents.py#function:make_deps.retrieve",
-      "tier": "ambiguous",
-      "candidates": [
-        "symbol:tests/test_specialist_agents.py#function:make_deps.retrieve",
-        "symbol:app/pipeline.py#function:_build_specialists.retrieve"
       ],
       "resolved": false,
       "confidence": 0.3,
@@ -14957,7 +14957,7 @@
       "type": "defines",
       "source": "file:app/main.py",
       "target": "symbol:app/main.py#function:_dispatch",
-      "line": 17,
+      "line": 21,
       "resolved": true,
       "confidence": 1,
       "extractor": "python-stdlib-ast"
@@ -14966,7 +14966,7 @@
       "type": "defines",
       "source": "file:app/main.py",
       "target": "symbol:app/main.py#function:health",
-      "line": 33,
+      "line": 37,
       "resolved": true,
       "confidence": 1,
       "extractor": "python-stdlib-ast"
@@ -14975,7 +14975,7 @@
       "type": "defines",
       "source": "file:app/main.py",
       "target": "symbol:app/main.py#function:lifespan",
-      "line": 22,
+      "line": 26,
       "resolved": true,
       "confidence": 1,
       "extractor": "python-stdlib-ast"
@@ -15110,7 +15110,7 @@
       "type": "defines",
       "source": "file:app/worker.py",
       "target": "symbol:app/worker.py#class:WorkerSettings",
-      "line": 10,
+      "line": 13,
       "resolved": true,
       "confidence": 1,
       "extractor": "python-stdlib-ast"
@@ -17189,7 +17189,7 @@
       "source": "file:app/main.py",
       "target": "file:app/webhook_receiver/main.py",
       "specifier": "app.webhook_receiver.main",
-      "line": 9,
+      "line": 13,
       "resolved": true,
       "confidence": 0.85,
       "extractor": "python-imports"
@@ -17199,7 +17199,17 @@
       "source": "file:app/main.py",
       "target": "file:app/webhook_receiver/queue.py",
       "specifier": "app.webhook_receiver.queue",
-      "line": 10,
+      "line": 14,
+      "resolved": true,
+      "confidence": 0.85,
+      "extractor": "python-imports"
+    },
+    {
+      "type": "imports",
+      "source": "file:app/main.py",
+      "target": "file:data/config.py",
+      "specifier": "data.config",
+      "line": 7,
       "resolved": true,
       "confidence": 0.85,
       "extractor": "python-imports"
@@ -17209,7 +17219,7 @@
       "source": "file:app/main.py",
       "target": "package:pypi:fastapi",
       "specifier": "fastapi",
-      "line": 7,
+      "line": 11,
       "resolved": false,
       "confidence": 0.5,
       "extractor": "python-imports"
@@ -17500,6 +17510,16 @@
       "target": "file:app/pipeline.py",
       "specifier": "app.pipeline",
       "line": 5,
+      "resolved": true,
+      "confidence": 0.85,
+      "extractor": "python-imports"
+    },
+    {
+      "type": "imports",
+      "source": "file:app/worker.py",
+      "target": "file:data/config.py",
+      "specifier": "data.config",
+      "line": 6,
       "resolved": true,
       "confidence": 0.85,
       "extractor": "python-imports"

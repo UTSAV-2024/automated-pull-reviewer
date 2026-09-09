@@ -1023,10 +1023,10 @@ digraph genesis {
   "symbol:agents/anthropic_client.py#function:call_claude" -> "symbol:agents/anthropic_client.py#function:_get_client" [label="calls"];
   "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:agents/base.py#class:BudgetExceededError" [label="calls"];
   "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:agents/base.py#function:_parse_findings" [label="calls"];
+  "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:app/pipeline.py#function:_build_specialists.llm_call" [label="calls"];
+  "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:app/pipeline.py#function:_build_specialists.retrieve" [label="calls"];
   "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:observability/events.py#function:log_event" [label="calls"];
   "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:tests/test_specialist_agents.py#function:make_deps.budget_check" [label="calls"];
-  "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:tests/test_specialist_agents.py#function:make_deps.llm_call" [label="calls"];
-  "symbol:agents/base.py#function:SpecialistAgent.run" -> "symbol:tests/test_specialist_agents.py#function:make_deps.retrieve" [label="calls"];
   "symbol:agents/specialists.py#function:build_specialists" -> "symbol:agents/base.py#class:SpecialistAgent" [label="calls"];
   "symbol:app/main.py#function:lifespan" -> "symbol:app/webhook_receiver/queue.py#function:make_dedupe_and_enqueue" [label="calls"];
   "symbol:app/pipeline.py#function:_build_specialists" -> "symbol:agents/base.py#class:SpecialistAgent" [label="calls"];
@@ -1731,6 +1731,7 @@ digraph genesis {
   "file:agents/specialists.py" -> "file:agents/base.py" [label="imports"];
   "file:app/main.py" -> "file:app/webhook_receiver/main.py" [label="imports"];
   "file:app/main.py" -> "file:app/webhook_receiver/queue.py" [label="imports"];
+  "file:app/main.py" -> "file:data/config.py" [label="imports"];
   "file:app/main.py" -> "package:pypi:fastapi" [label="imports"];
   "file:app/main.py" -> "runtime:python:contextlib" [label="imports"];
   "file:app/main.py" -> "runtime:python:os" [label="imports"];
@@ -1761,6 +1762,7 @@ digraph genesis {
   "file:app/webhook_receiver/signature.py" -> "runtime:python:hashlib" [label="imports"];
   "file:app/webhook_receiver/signature.py" -> "runtime:python:hmac" [label="imports"];
   "file:app/worker.py" -> "file:app/pipeline.py" [label="imports"];
+  "file:app/worker.py" -> "file:data/config.py" [label="imports"];
   "file:app/worker.py" -> "package:pypi:arq.connections" [label="imports"];
   "file:app/worker.py" -> "runtime:python:os" [label="imports"];
   "file:core/hitl_gate.py" -> "runtime:python:enum" [label="imports"];

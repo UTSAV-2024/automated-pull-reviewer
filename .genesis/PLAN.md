@@ -4,7 +4,7 @@
 
 - workflow: new-product
 - phase: verify
-- plan approval: utsavkumar1283@gmail.com at 2026-09-09T06:06:07.815Z
+- plan approval: utsavkumar1283@gmail.com at 2026-09-09T07:00:59.794Z
 
 ## Tasks
 
@@ -302,5 +302,13 @@
 - requirements: FR-4, FR-7, FR-8
 - scope: app/, tests/test_end_to_end.py
 - gates: unit: python -m pytest tests/test_end_to_end.py -q, independent-review: pass
+- next: Run the task pre-flight.
+
+### fix-env-loading — app/worker.py and app/main.py load .env before reading REDIS_URL, so real config isn't silently ignored in favor of defaults
+
+- state/risk: done / low
+- requirements: FR-4
+- scope: app/worker.py, app/main.py
+- gates: unit: python -m pytest tests/test_end_to_end.py -q
 - next: Run the task pre-flight.
 

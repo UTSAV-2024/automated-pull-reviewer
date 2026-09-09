@@ -4,10 +4,14 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from data.config import load_env
 
-from app.webhook_receiver.main import create_app
-from app.webhook_receiver.queue import make_dedupe_and_enqueue
+load_env()  # must run before importing webhook_receiver.main, which reads WEBHOOK_SECRET at import time
+
+from fastapi import FastAPI  # noqa: E402
+
+from app.webhook_receiver.main import create_app  # noqa: E402
+from app.webhook_receiver.queue import make_dedupe_and_enqueue  # noqa: E402
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 
