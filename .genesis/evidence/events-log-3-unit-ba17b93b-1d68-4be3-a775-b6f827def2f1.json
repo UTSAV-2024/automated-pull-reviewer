@@ -1,0 +1,30 @@
+{
+  "task": "events-log-3",
+  "gate": "unit",
+  "kind": "command",
+  "attempt": "ba17b93b-1d68-4be3-a775-b6f827def2f1",
+  "command": "python -m pytest tests/test_events_log.py -q",
+  "started_at": "2026-09-09T04:28:05.002Z",
+  "observed_at": "2026-09-09T04:28:21.181Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "....                                                                     [100%]\r\n============================== warnings summary ===============================\r\ntests/test_events_log.py::test_a_review_is_fully_reconstructable_in_order\r\n  C:\\Users\\utsav\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\pytest_asyncio\\plugin.py:1216: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16\r\n    return asyncio.get_event_loop_policy()\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n4 passed, 1 warning in 2.61s\r\n",
+  "stderr": "",
+  "failure": null,
+  "receipt": null,
+  "revision": {
+    "commit": "63ea2a08abbf3a66ceaa806f04747bdf369cab6f",
+    "dirty": true
+  },
+  "source_hash": "a9db54e2b5578483ae9b09689c8e67c5d79a3be938c160d67e061fe995cc49f1",
+  "before_hash": "a9db54e2b5578483ae9b09689c8e67c5d79a3be938c160d67e061fe995cc49f1",
+  "config_hash": "22a694f0205ced19ea253be6f9fb233333cd8321e958ee1fce8df2261da99a15",
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+    "variables": {}
+  },
+  "hash": "139a4a538e68dd898b87112f5702ca231e0ae78e6deeb43d4b665b808235b53d"
+}

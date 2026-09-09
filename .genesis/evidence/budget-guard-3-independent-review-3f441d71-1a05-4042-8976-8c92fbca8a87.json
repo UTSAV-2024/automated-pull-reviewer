@@ -1,0 +1,13 @@
+{
+  "task": "budget-guard-3",
+  "gate": "independent-review",
+  "kind": "review",
+  "attempt": "3f441d71-1a05-4042-8976-8c92fbca8a87",
+  "human": "utsavkumar1283@gmail.com",
+  "reason": "Reviewed diff and passing test proof against live Tiger Cloud, 2026-09-09",
+  "observed_at": "2026-09-09T04:01:33.263Z",
+  "source_hash": "6a09dd6d41a9afb4731c0f5236fdcdfa468caed0dc3bfe0ddd57bd316ddad5f2",
+  "config_hash": "a9696049d03bfa14b0d6580b29bf8ae06f07a52b0243fbd37dd81368d4febcab",
+  "reviewed_proofs": "5321bb174888fb1dcc5e04747d42602c46244d9238462eefe0d4f6af4a1545fe",
+  "hash": "f884376f653978243a84c0e9f286af17598cd2d607706c89ed1f203a4efcb96a"
+}

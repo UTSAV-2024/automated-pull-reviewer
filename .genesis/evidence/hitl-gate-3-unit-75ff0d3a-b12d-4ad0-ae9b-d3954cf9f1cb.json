@@ -1,0 +1,30 @@
+{
+  "task": "hitl-gate-3",
+  "gate": "unit",
+  "kind": "command",
+  "attempt": "75ff0d3a-b12d-4ad0-ae9b-d3954cf9f1cb",
+  "command": "python -m pytest tests/test_hitl_gate.py -q",
+  "started_at": "2026-09-09T04:04:16.826Z",
+  "observed_at": "2026-09-09T04:04:28.079Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": ".....                                                                    [100%]\r\n============================== warnings summary ===============================\r\ntests/test_hitl_gate.py::test_high_confidence_no_critical_auto_posts\r\n  C:\\Users\\utsav\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\pytest_asyncio\\plugin.py:1216: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16\r\n    return asyncio.get_event_loop_policy()\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n5 passed, 1 warning in 0.07s\r\n",
+  "stderr": "",
+  "failure": null,
+  "receipt": null,
+  "revision": {
+    "commit": "63ea2a08abbf3a66ceaa806f04747bdf369cab6f",
+    "dirty": true
+  },
+  "source_hash": "59163d59605d57bf4a4381c6f3fa3524f326f6316f94fcc157a79aa1c0a01829",
+  "before_hash": "59163d59605d57bf4a4381c6f3fa3524f326f6316f94fcc157a79aa1c0a01829",
+  "config_hash": "1a38d94f255a98647c81412a6f46d6bba46e9787cf506a1c32f36e2fa84a3825",
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+    "variables": {}
+  },
+  "hash": "a28bf64e053e6b312f0274a0c5543629d201bc229ee330adf03a26d0a9738a6a"
+}

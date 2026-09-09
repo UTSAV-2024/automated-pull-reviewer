@@ -1,0 +1,30 @@
+{
+  "task": "budget-guard-3",
+  "gate": "unit",
+  "kind": "command",
+  "attempt": "bec72600-a54f-46f8-83a2-5d8bd2e216ff",
+  "command": "python -m pytest tests/test_budget_guard.py -q",
+  "started_at": "2026-09-09T03:59:58.751Z",
+  "observed_at": "2026-09-09T04:00:05.290Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "....                                                                     [100%]\r\n============================== warnings summary ===============================\r\ntests/test_budget_guard.py::test_spend_today_sums_todays_costs\r\n  C:\\Users\\utsav\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\pytest_asyncio\\plugin.py:1216: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16\r\n    return asyncio.get_event_loop_policy()\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n4 passed, 1 warning in 1.41s\r\n",
+  "stderr": "",
+  "failure": null,
+  "receipt": null,
+  "revision": {
+    "commit": "63ea2a08abbf3a66ceaa806f04747bdf369cab6f",
+    "dirty": true
+  },
+  "source_hash": "6a09dd6d41a9afb4731c0f5236fdcdfa468caed0dc3bfe0ddd57bd316ddad5f2",
+  "before_hash": "6a09dd6d41a9afb4731c0f5236fdcdfa468caed0dc3bfe0ddd57bd316ddad5f2",
+  "config_hash": "a9696049d03bfa14b0d6580b29bf8ae06f07a52b0243fbd37dd81368d4febcab",
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+    "variables": {}
+  },
+  "hash": "8c8f57de4ab88c4354a723d91e62d049eb4b766072ad231c38002dd6b265b54f"
+}

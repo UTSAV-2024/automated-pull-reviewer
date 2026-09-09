@@ -1,0 +1,10 @@
+fastapi
+httpx
+redis
+arq
+pytest
+psycopg[binary]
+pgvector
+langgraph
+pytest-asyncio
+anthropic

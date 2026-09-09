@@ -1,0 +1,30 @@
+{
+  "task": "data-layer-2",
+  "gate": "unit",
+  "kind": "command",
+  "attempt": "33e94c97-b10c-497d-8898-7241a726b1b9",
+  "command": "python -m pytest tests/test_data_layer.py -q",
+  "started_at": "2026-09-09T03:32:04.041Z",
+  "observed_at": "2026-09-09T03:32:10.615Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "..........                                                               [100%]\r\n============================== warnings summary ===============================\r\ntests/test_data_layer.py::test_migrations_are_idempotent\r\n  C:\\Users\\utsav\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\pytest_asyncio\\plugin.py:1216: DeprecationWarning: 'asyncio.get_event_loop_policy' is deprecated and slated for removal in Python 3.16\r\n    return asyncio.get_event_loop_policy()\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n10 passed, 1 warning in 2.72s\r\n",
+  "stderr": "",
+  "failure": null,
+  "receipt": null,
+  "revision": {
+    "commit": "63ea2a08abbf3a66ceaa806f04747bdf369cab6f",
+    "dirty": true
+  },
+  "source_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+  "before_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+  "config_hash": "ee21f563882dc9d43083f32f6eefca4c39c2a45bf68844560b38d15097bfe967",
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+    "variables": {}
+  },
+  "hash": "160381d5c658b136141f2c2826da5bd7129880191bd7fe1616c6243207913752"
+}

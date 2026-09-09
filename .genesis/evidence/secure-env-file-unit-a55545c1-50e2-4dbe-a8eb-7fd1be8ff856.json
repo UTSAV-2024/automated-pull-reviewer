@@ -1,0 +1,30 @@
+{
+  "task": "secure-env-file",
+  "gate": "unit",
+  "kind": "command",
+  "attempt": "a55545c1-50e2-4dbe-a8eb-7fd1be8ff856",
+  "command": "git check-ignore -q .env",
+  "started_at": "2026-09-09T02:44:36.432Z",
+  "observed_at": "2026-09-09T02:44:37.669Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "",
+  "stderr": "",
+  "failure": null,
+  "receipt": null,
+  "revision": {
+    "commit": "63ea2a08abbf3a66ceaa806f04747bdf369cab6f",
+    "dirty": true
+  },
+  "source_hash": "27ec5eb0e74c16b64b03cf992983244a89387a8b1f1b941b5207d74bc6c77245",
+  "before_hash": "27ec5eb0e74c16b64b03cf992983244a89387a8b1f1b941b5207d74bc6c77245",
+  "config_hash": "b30a3be782a1eb59e215414c0e65ea9610a2e346a24aa3608ed936ed0ed5e5c7",
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+    "variables": {}
+  },
+  "hash": "2d93f1232282009844d7866852f1a87c83321798e5253cd4ce6bd507e02be9b8"
+}

@@ -1,0 +1,13 @@
+{
+  "task": "orchestrator-2",
+  "gate": "independent-review",
+  "kind": "review",
+  "attempt": "cc07d3cc-38a0-4ff9-8257-746def3d6074",
+  "human": "utsavkumar1283@gmail.com",
+  "reason": "Reviewed diff and passing test proof (incl. empirical crash-resume test), 2026-09-09",
+  "observed_at": "2026-09-09T03:39:38.200Z",
+  "source_hash": "bb9bb24dae7981bbb09213e259376ae7f91eed8fd10169cadce0dd1b6ca45d6f",
+  "config_hash": "7b30437e4beb4bdfbc4e78a5d3e6118fcd445a1b382cecba565740f7869097df",
+  "reviewed_proofs": "fae61b3d9efb6b45c053a78c09fb104dc4ae227b2da00c6a712ba35212b62715",
+  "hash": "07a570cc3679d9372f9589e62c47d3fed2e77849a15a49b533f78c1f1b3d8b13"
+}

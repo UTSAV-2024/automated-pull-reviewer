@@ -1,0 +1,3428 @@
+{
+  "schema_version": 2,
+  "project": {
+    "name": "automated-pull-reviewer",
+    "mode": "init",
+    "profile": "prototype",
+    "objective": "Automated PR reviewer: a tool that automatically reviews pull requests for code quality, security, and style issues, and posts feedback",
+    "constraints": [],
+    "non_goals": [],
+    "trust_boundary": "local repository",
+    "created_at": "2026-09-08T23:52:02.731Z",
+    "updated_at": "2026-09-09T06:19:19.038Z"
+  },
+  "policy": {
+    "ponytail": "full",
+    "autonomy": "human-in-the-loop",
+    "learned_rule_promotion": "human-required",
+    "cleanup": "propose-only",
+    "traces": {
+      "storage": "local",
+      "commit_raw": false,
+      "redact_secrets": true
+    }
+  },
+  "lifecycle": {
+    "phase": "verify",
+    "status": "ready",
+    "active_task": null,
+    "blocker": null,
+    "next_action": "Review completed work and choose the next bounded outcome."
+  },
+  "commands": {},
+  "workflow": {
+    "type": "new-product",
+    "started_at": "2026-09-08T23:52:02.743Z",
+    "spec_check": {
+      "at": "2026-09-08T23:57:26.529Z",
+      "source_hash": "baeb88858a16a54845ff413e16ef3841c58fd065983597dd745e6b36f2a03c23",
+      "requirements": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6",
+        "AC-7",
+        "AC-8",
+        "FR-1",
+        "FR-10",
+        "FR-11",
+        "FR-2",
+        "FR-3",
+        "FR-4",
+        "FR-5",
+        "FR-6",
+        "FR-7",
+        "FR-8",
+        "FR-9",
+        "NFR-1",
+        "NFR-2",
+        "NFR-3",
+        "NFR-4",
+        "NFR-5",
+        "NFR-6",
+        "NFR-7",
+        "NFR-8"
+      ]
+    },
+    "plan_check": {
+      "at": "2026-09-09T06:06:03.955Z",
+      "source_hash": "a78ba449100548fa0e1aebd05284907f2c0d3bb608045253f7db8ea461e0598d"
+    },
+    "plan_approval": {
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Approved wire-app integration task, 2026-09-09",
+      "at": "2026-09-09T06:06:07.815Z",
+      "source_hash": "a78ba449100548fa0e1aebd05284907f2c0d3bb608045253f7db8ea461e0598d"
+    }
+  },
+  "artifacts": [
+    {
+      "id": "SPEC-1",
+      "type": "specification",
+      "path": "SPEC.md",
+      "status": "approved",
+      "requirements": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6",
+        "AC-7",
+        "AC-8",
+        "FR-1",
+        "FR-10",
+        "FR-11",
+        "FR-2",
+        "FR-3",
+        "FR-4",
+        "FR-5",
+        "FR-6",
+        "FR-7",
+        "FR-8",
+        "FR-9",
+        "NFR-1",
+        "NFR-2",
+        "NFR-3",
+        "NFR-4",
+        "NFR-5",
+        "NFR-6",
+        "NFR-7",
+        "NFR-8"
+      ],
+      "source_hash": "baeb88858a16a54845ff413e16ef3841c58fd065983597dd745e6b36f2a03c23",
+      "approval": {
+        "human": "utsavkumar1283@gmail.com",
+        "reason": "Approved MVP core-loop scope with Tiger Cloud data store, as discussed 2026-09-09",
+        "at": "2026-09-09T00:00:12.337Z",
+        "source_hash": "baeb88858a16a54845ff413e16ef3841c58fd065983597dd745e6b36f2a03c23"
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "ASSUMPTION-51dccc33",
+      "text": "No default confidence threshold value is specified for the HITL gate's auto-post vs human-queue decision; this must be set explicitly during planning/implementation and is tracked as an open question in SPEC.md.",
+      "status": "open",
+      "source": "D:\\downloads\\AI_PR_Review_Agent_Project_Explainer.pdf",
+      "recorded_at": "2026-09-08T23:56:54.208Z",
+      "paths": [],
+      "tags": []
+    },
+    {
+      "id": "ASSUMPTION-cd665904",
+      "text": "Prompt-injection mitigation for attacker-controlled PR diff content reaching specialist prompts (esp. the security specialist) is unresolved; no auto-post path should be trusted in production until this is addressed.",
+      "status": "open",
+      "source": "D:\\downloads\\AI_PR_Review_Agent_Project_Explainer.pdf",
+      "recorded_at": "2026-09-08T23:56:54.688Z",
+      "paths": [],
+      "tags": []
+    }
+  ],
+  "invariants": [],
+  "decisions": [
+    {
+      "id": "DECISION-f38c1a4c",
+      "title": "Multi-agent specialist architecture",
+      "text": "Use four parallel specialist agents (security, quality, tests, docs) fanned out via LangGraph instead of one generalist prompt, each grounded via hybrid RAG retrieval before reasoning, merged by an aggregator into structured Findings.",
+      "status": "accepted",
+      "source": "D:\\downloads\\AI_PR_Review_Agent_Project_Explainer.pdf",
+      "recorded_at": "2026-09-08T23:56:51.457Z",
+      "paths": [],
+      "tags": []
+    },
+    {
+      "id": "DECISION-76f20ae4",
+      "title": "LangGraph over Temporal (ADR-001)",
+      "text": "Chosen for zero extra infrastructure, first-class parallel fan-out (Send API), and Redis-based checkpointing reusing the existing queue. Kept behind a narrow interface (core/workflow_engine.py) so it is swappable for Temporal if scale demands it later.",
+      "status": "accepted",
+      "source": "D:\\downloads\\AI_PR_Review_Agent_Project_Explainer.pdf",
+      "recorded_at": "2026-09-08T23:56:52.129Z",
+      "paths": [],
+      "tags": []
+    },
+    {
+      "id": "DECISION-586ebec1",
+      "title": "Modular monolith, not microservices (ADR-002)",
+      "text": "One deployed process with 23 inward-only-dependency modules. Deferred splitting into a stateless ingress service + separate worker pool until a measured bottleneck (single ARQ worker) actually occurs.",
+      "status": "accepted",
+      "source": "D:\\downloads\\AI_PR_Review_Agent_Project_Explainer.pdf",
+      "recorded_at": "2026-09-08T23:56:52.567Z",
+      "paths": [],
+      "tags": []
+    },
+    {
+      "id": "DECISION-d77daa72",
+      "title": "Tiger Cloud as single data spine (ADR-003)",
+      "text": "One Postgres-compatible store (Tiger Cloud: Postgres + TimescaleDB + pgvector/pgvectorscale) carries vector memory, relational truth, and time-series events, instead of three separate specialized databases. Redis stays separate for ephemeral queue/checkpoint state only. Confirmed as a hard requirement by the user for v1, not deferred to a simpler local Postgres.",
+      "status": "accepted",
+      "source": "user decision, 2026-09-09; D:\\downloads\\AI_PR_Review_Agent_Project_Explainer.pdf",
+      "recorded_at": "2026-09-08T23:56:52.968Z",
+      "paths": [],
+      "tags": []
+    },
+    {
+      "id": "DECISION-e998dfa5",
+      "title": "BudgetGuard hard cost cap (ADR-004)",
+      "text": "BudgetGuard reads a live continuous-aggregate cost rollup and hard-blocks new LLM calls once a daily spend cap is exceeded, checked before each call rather than reconciled after.",
+      "status": "accepted",
+      "source": "D:\\downloads\\AI_PR_Review_Agent_Project_Explainer.pdf",
+      "recorded_at": "2026-09-08T23:56:53.370Z",
+      "paths": [],
+      "tags": []
+    },
+    {
+      "id": "DECISION-b21c1e78",
+      "title": "V1 scope: MVP core loop only",
+      "text": "Implementation for v1 covers roughly phases 0-8 of the source roadmap: webhook ingress+idempotency, queue, LangGraph fan-out to 4 specialists with RAG grounding, aggregator, confidence-weighted HITL gate, post back to GitHub. Full observability dashboard, evaluation harness, governance, economics dashboard, CI/CD-for-AI, and continuous learning are explicitly deferred as later tasks, not part of this specification.",
+      "status": "accepted",
+      "source": "user decision, 2026-09-09",
+      "recorded_at": "2026-09-08T23:56:53.751Z",
+      "paths": [],
+      "tags": []
+    }
+  ],
+  "knowledge": [],
+  "tasks": [
+    {
+      "id": "SPEC-1",
+      "outcome": "Produce an approved, implementation-ready product specification",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "SPEC.md"
+      ],
+      "dependencies": [],
+      "requirements": [],
+      "gates": [
+        {
+          "id": "independent-review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "human": "utsavkumar1283@gmail.com",
+            "reason": "Approved MVP core-loop scope with Tiger Cloud data store, as discussed 2026-09-09",
+            "source_hash": "1a19c56d826c9f02ed99dfe0d81886b104ef5d5b12c3c5605fea44bca427a8ef",
+            "observed_at": "2026-09-09T00:00:12.337Z"
+          },
+          "kind": "review"
+        }
+      ],
+      "next_action": "Interview the human, record durable context, and replace every placeholder in SPEC.md.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-08T23:52:02.744Z",
+      "updated_at": "2026-09-09T00:00:12.337Z"
+    },
+    {
+      "id": "webhook-ingress",
+      "outcome": "FastAPI endpoint receives GitHub pull_request webhooks, verifies HMAC-SHA256 signature, dedups by delivery ID, returns 200 OK immediately, and enqueues a review job to Redis/ARQ",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "app/webhook_receiver/",
+        "tests/test_webhook_ingress.py"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-1",
+        "FR-2",
+        "FR-3",
+        "NFR-1",
+        "NFR-3",
+        "AC-1",
+        "AC-2"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_webhook_ingress.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/webhook-ingress-unit-6bc14734-fdcd-446f-9ebe-e00344cb7fd8.json",
+            "hash": "1d8a23d31f78a327aae7255e23c9e06b75a1a37d1f1f605c277dd534bb7b01f1",
+            "source_hash": "037a14181aa39e634c51da0ded423682d9c88e6cd8a1a1bacb1484ad47b64786",
+            "config_hash": "2810bfed2da0057643b3ee0072f9493bb1e3d1bbd3bfd8e093aa3b5257738efe",
+            "observed_at": "2026-09-09T00:09:08.974Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/webhook-ingress-independent-review-795b8936-9d33-473b-ad75-bf36f4091586.json",
+            "hash": "77644747d5552b8051e1e821ce5675e7ad275db3462997f8a779f9f8311888d0",
+            "source_hash": "037a14181aa39e634c51da0ded423682d9c88e6cd8a1a1bacb1484ad47b64786",
+            "config_hash": "2810bfed2da0057643b3ee0072f9493bb1e3d1bbd3bfd8e093aa3b5257738efe",
+            "observed_at": "2026-09-09T00:11:02.501Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:01:30.934Z",
+      "updated_at": "2026-09-09T00:11:04.490Z",
+      "base_manifest": {
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921"
+      }
+    },
+    {
+      "id": "data-layer",
+      "outcome": "Tiger Cloud (Postgres+TimescaleDB+pgvector) schema and migrations for vector memory, relational truth, and an append-only events table",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "data/",
+        "migrations/",
+        "tests/test_data_layer.py"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-10",
+        "NFR-5"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_data_layer.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/data-layer-unit-d8018372-103e-411b-8fb4-447a1b43a5b7.json",
+            "hash": "e46120a5ec2b6fdb0e8945120ac721a7be5a85ae64b3c80873fd341304808104",
+            "source_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+            "config_hash": "5101211f1a62e2138fd8643f38e352a98eb9af8c0079ac6a82111d35f90a7f8b",
+            "observed_at": "2026-09-09T02:49:59.704Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/data-layer-independent-review-51139125-dcf5-4075-878d-b4513833c625.json",
+            "hash": "db2ca95b4f891c27ff77d8ec2d10d112444737291cee22e9718d58b1c5ef2cbe",
+            "source_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+            "config_hash": "5101211f1a62e2138fd8643f38e352a98eb9af8c0079ac6a82111d35f90a7f8b",
+            "observed_at": "2026-09-09T03:30:18.723Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:30.351Z",
+      "updated_at": "2026-09-09T00:02:30.352Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "requirements.txt": "a52bd6e2ebb298470edad4744456e8ed07ef94fcdd0a2c14f3db746114896f6c",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "orchestrator",
+      "outcome": "LangGraph StateGraph fans a review job out to 4 specialist nodes in parallel, checkpoints to Redis per node, enforces per-node timeouts, and resumes from last completed node after a crash",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "orchestrator/",
+        "tests/test_orchestrator.py"
+      ],
+      "dependencies": [
+        "webhook-ingress",
+        "data-layer"
+      ],
+      "requirements": [
+        "FR-4",
+        "NFR-2",
+        "NFR-7",
+        "NFR-8",
+        "AC-8"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_orchestrator.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:30.998Z",
+      "updated_at": "2026-09-09T00:02:31.000Z"
+    },
+    {
+      "id": "retrieval-layer",
+      "outcome": "Hybrid retrieval: vector similarity search (pgvector/pgvectorscale) fused with keyword full-text search (GIN) via Reciprocal Rank Fusion, returning top-k code chunks for a diff",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "tools/retrieval/",
+        "tests/test_retrieval.py"
+      ],
+      "dependencies": [
+        "data-layer"
+      ],
+      "requirements": [
+        "FR-5",
+        "NFR-4"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_retrieval.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:31.622Z",
+      "updated_at": "2026-09-09T00:02:31.624Z"
+    },
+    {
+      "id": "specialist-agents",
+      "outcome": "Four specialist agents (security, quality, tests, docs) share a base shape (budget check, retrieval call, LLM call, event logging, error handling) and each return structured Findings",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "agents/",
+        "tests/test_specialist_agents.py"
+      ],
+      "dependencies": [
+        "orchestrator",
+        "retrieval-layer"
+      ],
+      "requirements": [
+        "AC-3"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_specialist_agents.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:32.259Z",
+      "updated_at": "2026-09-09T00:02:32.261Z"
+    },
+    {
+      "id": "aggregator",
+      "outcome": "Aggregator node waits for all 4 specialists, merges and de-duplicates findings, computes one overall confidence score",
+      "state": "rejected",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "orchestrator/aggregator.py",
+        "tests/test_aggregator.py"
+      ],
+      "dependencies": [
+        "specialist-agents"
+      ],
+      "requirements": [
+        "FR-6"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_aggregator.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:32.971Z",
+      "updated_at": "2026-09-09T00:02:32.973Z"
+    },
+    {
+      "id": "budget-guard",
+      "outcome": "BudgetGuard checks a live cost rollup before each LLM call and hard-blocks calls once the daily spend cap is reached",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "reliability/budget_guard.py",
+        "tests/test_budget_guard.py"
+      ],
+      "dependencies": [
+        "data-layer"
+      ],
+      "requirements": [
+        "FR-11",
+        "NFR-6",
+        "AC-7"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_budget_guard.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:33.637Z",
+      "updated_at": "2026-09-09T00:02:33.638Z"
+    },
+    {
+      "id": "hitl-gate",
+      "outcome": "Confidence-weighted gate: CRITICAL always escalates, below-threshold confidence routes to human queue, otherwise auto-post",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "core/hitl_gate.py",
+        "tests/test_hitl_gate.py"
+      ],
+      "dependencies": [
+        "aggregator"
+      ],
+      "requirements": [
+        "FR-7",
+        "AC-4",
+        "AC-5"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_hitl_gate.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:34.228Z",
+      "updated_at": "2026-09-09T00:02:34.229Z"
+    },
+    {
+      "id": "github-poster",
+      "outcome": "Posts the structured, HITL-approved review back to GitHub with findings attached to specific files/lines",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "tools/github_client.py",
+        "tests/test_github_poster.py"
+      ],
+      "dependencies": [
+        "hitl-gate"
+      ],
+      "requirements": [
+        "FR-8"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_github_poster.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:34.855Z",
+      "updated_at": "2026-09-09T00:02:34.858Z"
+    },
+    {
+      "id": "events-log",
+      "outcome": "Every agent action (span, LLM call, tool call, decision) is written to the append-only events table; a review is fully reconstructable and grounding is verifiable from it",
+      "state": "rejected",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "observability/",
+        "tests/test_events_log.py"
+      ],
+      "dependencies": [
+        "data-layer",
+        "retrieval-layer"
+      ],
+      "requirements": [
+        "AC-6"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_events_log.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:35.463Z",
+      "updated_at": "2026-09-09T00:02:35.464Z"
+    },
+    {
+      "id": "dispute-flow",
+      "outcome": "Developer disputes on a posted finding are recorded as feedback and require a minimum evidence threshold before influencing future behavior",
+      "state": "rejected",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "core/disputes.py",
+        "tests/test_dispute_flow.py"
+      ],
+      "dependencies": [
+        "github-poster"
+      ],
+      "requirements": [
+        "FR-9"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_dispute_flow.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:02:36.086Z",
+      "updated_at": "2026-09-09T00:02:36.088Z"
+    },
+    {
+      "id": "project-scaffold",
+      "outcome": "Root-level shared project files: pinned Python dependency manifest (requirements.txt) and .gitignore, so every later task installs the same dependency set without touching root files itself",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "requirements.txt",
+        ".gitignore"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-3"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pip install -r requirements.txt",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/project-scaffold-unit-972118fa-7f79-4f34-ae91-1f7951fa4b41.json",
+            "hash": "aab92466e20e5f1d3e947959719c5fefb7e6e328b8c0462ba740dbe8c0978927",
+            "source_hash": "ed45cddc3f95ae5d1b571063962e3c0ab64ad764ae3d48d8e05edb635a70cb23",
+            "config_hash": "c54d7b50086c780138dfc137539de00b640887d23dcfe7da5830791b8a8e8cf5",
+            "observed_at": "2026-09-09T00:13:12.819Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T00:12:36.457Z",
+      "updated_at": "2026-09-09T00:13:16.409Z",
+      "base_manifest": {
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "secure-env-file",
+      "outcome": "Add .env to .gitignore so local secrets (e.g. DATABASE_URL) are never committed",
+      "state": "rejected",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        ".gitignore"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-3"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "git check-ignore -q .env",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/secure-env-file-unit-a55545c1-50e2-4dbe-a8eb-7fd1be8ff856.json",
+            "hash": "2d93f1232282009844d7866852f1a87c83321798e5253cd4ce6bd507e02be9b8",
+            "source_hash": "27ec5eb0e74c16b64b03cf992983244a89387a8b1f1b941b5207d74bc6c77245",
+            "config_hash": "b30a3be782a1eb59e215414c0e65ea9610a2e346a24aa3608ed936ed0ed5e5c7",
+            "observed_at": "2026-09-09T02:44:37.669Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T02:44:10.970Z",
+      "updated_at": "2026-09-09T02:44:10.971Z",
+      "base_manifest": {
+        ".env": "08e17788e2aa93a172bb1f469ec3b8b777b7cb8978065f48de53a3d9035ab166",
+        ".gitignore": "e9c9e99e00a999d1175ef3277a393271d0340f87d20a20d8cc5f59f85d289f92",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "requirements.txt": "a52bd6e2ebb298470edad4744456e8ed07ef94fcdd0a2c14f3db746114896f6c",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "secure-env-file-2",
+      "outcome": "Add .env to .gitignore so local secrets (e.g. DATABASE_URL) are never committed",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        ".gitignore"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-3"
+      ],
+      "inputs": [
+        ".env"
+      ],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "git check-ignore -q .env",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/secure-env-file-2-unit-148af7cc-3753-4ba9-b39f-43cc1cfe96f0.json",
+            "hash": "44278a22b93edf5cfd4084be72c06bde7a1bc17c2e643786f728742c54da6c2e",
+            "source_hash": "7d4c8a5a133f49ce5879d5381887104ab826dcbe06c17048eeeac45e2dc32dab",
+            "config_hash": "88ba45ed18e5fd89f7e12e7ef2c52e2f03559f83b06de7b794b12c468a72868d",
+            "observed_at": "2026-09-09T02:45:27.681Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T02:45:12.905Z",
+      "updated_at": "2026-09-09T02:45:28.805Z",
+      "base_manifest": {
+        ".env": "08e17788e2aa93a172bb1f469ec3b8b777b7cb8978065f48de53a3d9035ab166",
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "requirements.txt": "a52bd6e2ebb298470edad4744456e8ed07ef94fcdd0a2c14f3db746114896f6c",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "add-db-dependencies",
+      "outcome": "Add psycopg (Postgres driver) and pgvector client library to requirements.txt for the data layer",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "requirements.txt"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-10",
+        "NFR-5"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pip install -r requirements.txt",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/add-db-dependencies-unit-7dd3c261-f67e-4109-9442-d2a7e5fa6c96.json",
+            "hash": "99491405ecad7fdb7800b519bebefe4802e582adf82bd3e483d7ed69fd86881c",
+            "source_hash": "464f7465345b7aab99b61ef916710065eccf23f125aeff1e558af307ad207a3f",
+            "config_hash": "2be3c34462766dc35fc1b81b6fe7d090ad21f3557c48fb60968cbd0217f82561",
+            "observed_at": "2026-09-09T02:47:09.654Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T02:46:36.072Z",
+      "updated_at": "2026-09-09T02:47:11.692Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "requirements.txt": "a52bd6e2ebb298470edad4744456e8ed07ef94fcdd0a2c14f3db746114896f6c",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "data-layer-2",
+      "outcome": "Tiger Cloud (Postgres+TimescaleDB+pgvector) schema and migrations for vector memory, relational truth, and an append-only events table",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "data/",
+        "migrations/",
+        "tests/test_data_layer.py"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-10",
+        "NFR-5"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_data_layer.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/data-layer-2-unit-33e94c97-b10c-497d-8898-7241a726b1b9.json",
+            "hash": "160381d5c658b136141f2c2826da5bd7129880191bd7fe1616c6243207913752",
+            "source_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+            "config_hash": "ee21f563882dc9d43083f32f6eefca4c39c2a45bf68844560b38d15097bfe967",
+            "observed_at": "2026-09-09T03:32:10.615Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/data-layer-2-independent-review-3d0885b6-b0e9-4517-b20e-a00b3794796e.json",
+            "hash": "9ce3fdecb50854edb4c5e81a7cc49ef5e060384e3484d7150c88c76f30cd3871",
+            "source_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+            "config_hash": "ee21f563882dc9d43083f32f6eefca4c39c2a45bf68844560b38d15097bfe967",
+            "observed_at": "2026-09-09T03:32:19.637Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:37.051Z",
+      "updated_at": "2026-09-09T03:32:21.756Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "requirements.txt": "7ef04573a499a9695872fba0c8dd530fc1408f296e7217a39b4e24a0726fe9b8",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "orchestrator-2",
+      "outcome": "LangGraph StateGraph fans a review job out to 4 specialist nodes in parallel, checkpoints to Redis per node, enforces per-node timeouts, and resumes from last completed node after a crash",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "orchestrator/",
+        "tests/test_orchestrator.py"
+      ],
+      "dependencies": [
+        "webhook-ingress",
+        "data-layer-2"
+      ],
+      "requirements": [
+        "FR-4",
+        "NFR-2",
+        "NFR-7",
+        "NFR-8",
+        "AC-8"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_orchestrator.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/orchestrator-2-unit-413ec8e0-f692-4e6c-955a-54dcc5128cdc.json",
+            "hash": "ae86c22c6f28dab85c0abb9ef0b265c3caeabf901e815110ff15ffa6267a8c99",
+            "source_hash": "bb9bb24dae7981bbb09213e259376ae7f91eed8fd10169cadce0dd1b6ca45d6f",
+            "config_hash": "7b30437e4beb4bdfbc4e78a5d3e6118fcd445a1b382cecba565740f7869097df",
+            "observed_at": "2026-09-09T03:37:19.493Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/orchestrator-2-independent-review-cc07d3cc-38a0-4ff9-8257-746def3d6074.json",
+            "hash": "07a570cc3679d9372f9589e62c47d3fed2e77849a15a49b533f78c1f1b3d8b13",
+            "source_hash": "bb9bb24dae7981bbb09213e259376ae7f91eed8fd10169cadce0dd1b6ca45d6f",
+            "config_hash": "7b30437e4beb4bdfbc4e78a5d3e6118fcd445a1b382cecba565740f7869097df",
+            "observed_at": "2026-09-09T03:39:38.200Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:37.990Z",
+      "updated_at": "2026-09-09T03:31:37.991Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "requirements.txt": "7ef04573a499a9695872fba0c8dd530fc1408f296e7217a39b4e24a0726fe9b8",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "retrieval-layer-2",
+      "outcome": "Hybrid retrieval: vector similarity search (pgvector/pgvectorscale) fused with keyword full-text search (GIN) via Reciprocal Rank Fusion, returning top-k code chunks for a diff",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "tools/retrieval/",
+        "tests/test_retrieval.py"
+      ],
+      "dependencies": [
+        "data-layer-2"
+      ],
+      "requirements": [
+        "FR-5",
+        "NFR-4"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_retrieval.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:38.961Z",
+      "updated_at": "2026-09-09T03:31:38.962Z"
+    },
+    {
+      "id": "specialist-agents-2",
+      "outcome": "Four specialist agents (security, quality, tests, docs) share a base shape (budget check, retrieval call, LLM call, event logging, error handling) and each return structured Findings",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "agents/",
+        "tests/test_specialist_agents.py"
+      ],
+      "dependencies": [
+        "orchestrator-2",
+        "retrieval-layer-2"
+      ],
+      "requirements": [
+        "AC-3"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_specialist_agents.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:39.931Z",
+      "updated_at": "2026-09-09T03:31:39.933Z"
+    },
+    {
+      "id": "aggregator-2",
+      "outcome": "Aggregator node waits for all 4 specialists, merges and de-duplicates findings, computes one overall confidence score",
+      "state": "rejected",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "orchestrator/aggregator.py",
+        "tests/test_aggregator.py"
+      ],
+      "dependencies": [
+        "specialist-agents-2"
+      ],
+      "requirements": [
+        "FR-6"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_aggregator.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:40.876Z",
+      "updated_at": "2026-09-09T03:31:40.877Z"
+    },
+    {
+      "id": "budget-guard-2",
+      "outcome": "BudgetGuard checks a live cost rollup before each LLM call and hard-blocks calls once the daily spend cap is reached",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "reliability/budget_guard.py",
+        "tests/test_budget_guard.py"
+      ],
+      "dependencies": [
+        "data-layer-2"
+      ],
+      "requirements": [
+        "FR-11",
+        "NFR-6",
+        "AC-7"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_budget_guard.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:41.854Z",
+      "updated_at": "2026-09-09T03:31:41.855Z"
+    },
+    {
+      "id": "hitl-gate-2",
+      "outcome": "Confidence-weighted gate: CRITICAL always escalates, below-threshold confidence routes to human queue, otherwise auto-post",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "core/hitl_gate.py",
+        "tests/test_hitl_gate.py"
+      ],
+      "dependencies": [
+        "aggregator-2"
+      ],
+      "requirements": [
+        "FR-7",
+        "AC-4",
+        "AC-5"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_hitl_gate.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:42.798Z",
+      "updated_at": "2026-09-09T03:31:42.798Z"
+    },
+    {
+      "id": "github-poster-2",
+      "outcome": "Posts the structured, HITL-approved review back to GitHub with findings attached to specific files/lines",
+      "state": "rejected",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "tools/github_client.py",
+        "tests/test_github_poster.py"
+      ],
+      "dependencies": [
+        "hitl-gate-2"
+      ],
+      "requirements": [
+        "FR-8"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_github_poster.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:43.757Z",
+      "updated_at": "2026-09-09T03:31:43.758Z"
+    },
+    {
+      "id": "events-log-2",
+      "outcome": "Every agent action (span, LLM call, tool call, decision) is written to the append-only events table; a review is fully reconstructable and grounding is verifiable from it",
+      "state": "rejected",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "observability/",
+        "tests/test_events_log.py"
+      ],
+      "dependencies": [
+        "data-layer-2",
+        "retrieval-layer-2"
+      ],
+      "requirements": [
+        "AC-6"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_events_log.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:44.698Z",
+      "updated_at": "2026-09-09T03:31:44.699Z"
+    },
+    {
+      "id": "dispute-flow-2",
+      "outcome": "Developer disputes on a posted finding are recorded as feedback and require a minimum evidence threshold before influencing future behavior",
+      "state": "rejected",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "core/disputes.py",
+        "tests/test_dispute_flow.py"
+      ],
+      "dependencies": [
+        "github-poster-2"
+      ],
+      "requirements": [
+        "FR-9"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_dispute_flow.py -q",
+          "mandatory": true,
+          "status": "pending",
+          "evidence": null
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:31:45.651Z",
+      "updated_at": "2026-09-09T03:31:45.652Z"
+    },
+    {
+      "id": "add-langgraph-dependency",
+      "outcome": "Add langgraph to requirements.txt for the orchestrator",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "requirements.txt"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-4"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pip install -r requirements.txt",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/add-langgraph-dependency-unit-b64018b9-4ac9-4daa-855e-b09348ae7dac.json",
+            "hash": "f91dd0bafd4e8cd609e50622496e6a06a7b0e9e664f0b94055cb5e033825d1df",
+            "source_hash": "9d3b548d205353106959c2d56a81d6802025f9881157ce68012feb89a4add101",
+            "config_hash": "fb5c3822bcd0b18944a80ed3d871385987af70b5304895d3fc1fbe57f5f804fd",
+            "observed_at": "2026-09-09T03:35:21.703Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:34:54.179Z",
+      "updated_at": "2026-09-09T03:35:23.434Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "requirements.txt": "7ef04573a499a9695872fba0c8dd530fc1408f296e7217a39b4e24a0726fe9b8",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "add-anthropic-dependency",
+      "outcome": "Add the anthropic SDK to requirements.txt for the specialist agents' LLM calls",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "requirements.txt"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "AC-3"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pip install -r requirements.txt",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/add-anthropic-dependency-unit-6da1b21d-8beb-426e-b445-1e66131b6162.json",
+            "hash": "bb881d9396bb8b2b36f40f0cda374824d2a4fb8d1783a0af165648bd3bf8b66c",
+            "source_hash": "f378f0308b5e412b48f37a21b26dfc65efa9af09a30b7b89c54d2d92787cb85d",
+            "config_hash": "a65ffc12b314e904388d7000bc85520faa134977eb150be80286a53161186f0f",
+            "observed_at": "2026-09-09T03:41:36.692Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:40:58.976Z",
+      "updated_at": "2026-09-09T03:41:38.795Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "orchestrator-3",
+      "outcome": "LangGraph StateGraph fans a review job out to 4 specialist nodes in parallel, checkpoints to Redis per node, enforces per-node timeouts, and resumes from last completed node after a crash",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "orchestrator/",
+        "tests/test_orchestrator.py"
+      ],
+      "dependencies": [
+        "webhook-ingress",
+        "data-layer-2"
+      ],
+      "requirements": [
+        "FR-4",
+        "NFR-2",
+        "NFR-7",
+        "NFR-8",
+        "AC-8"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_orchestrator.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/orchestrator-3-unit-2a03a70e-2cb6-4199-a5b2-c116c04945f7.json",
+            "hash": "a97c7516bf920d0c8f6541f8ab10e2ceb27c29e527e8f056c6b4ce6ef1b5f336",
+            "source_hash": "f378f0308b5e412b48f37a21b26dfc65efa9af09a30b7b89c54d2d92787cb85d",
+            "config_hash": "1c18456d284e0df196f6e1e023d8e8b154f41b554f4f1ea01d4631aada740d5a",
+            "observed_at": "2026-09-09T03:41:56.543Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/orchestrator-3-independent-review-09c565ce-92c5-4b60-a83a-4d841022b10e.json",
+            "hash": "f6c70de6688eed7e19b87eabd2bbb3a98793f27db90a4c91d93c225da693f4f7",
+            "source_hash": "f378f0308b5e412b48f37a21b26dfc65efa9af09a30b7b89c54d2d92787cb85d",
+            "config_hash": "1c18456d284e0df196f6e1e023d8e8b154f41b554f4f1ea01d4631aada740d5a",
+            "observed_at": "2026-09-09T03:41:58.546Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:00.384Z",
+      "updated_at": "2026-09-09T03:42:01.799Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "retrieval-layer-3",
+      "outcome": "Hybrid retrieval: vector similarity search (pgvector/pgvectorscale) fused with keyword full-text search (GIN) via Reciprocal Rank Fusion, returning top-k code chunks for a diff",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "tools/retrieval/",
+        "tests/test_retrieval.py"
+      ],
+      "dependencies": [
+        "data-layer-2"
+      ],
+      "requirements": [
+        "FR-5",
+        "NFR-4"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_retrieval.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/retrieval-layer-3-unit-99daf949-3515-4388-b201-04e0671140e3.json",
+            "hash": "007428bbfe8b0796069e900ed33845a247145bcd153dec3237cfa6949a1625fc",
+            "source_hash": "378b5be58cbc12276a543af4575a117a5269a7a88fc9010bdb33410801d070dd",
+            "config_hash": "5757cf9252eafc70482a7f17aceb52e492d13145db6858b737c230790ff502c9",
+            "observed_at": "2026-09-09T03:43:55.886Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/retrieval-layer-3-independent-review-479e4c35-26b0-40a4-9f46-7275eb5ee06f.json",
+            "hash": "db4b10986de8d900184143b46f47635086465d1ec1cf7198231262ac515d41b9",
+            "source_hash": "378b5be58cbc12276a543af4575a117a5269a7a88fc9010bdb33410801d070dd",
+            "config_hash": "5757cf9252eafc70482a7f17aceb52e492d13145db6858b737c230790ff502c9",
+            "observed_at": "2026-09-09T03:53:27.990Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:01.711Z",
+      "updated_at": "2026-09-09T03:53:30.937Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f"
+      }
+    },
+    {
+      "id": "specialist-agents-3",
+      "outcome": "Four specialist agents (security, quality, tests, docs) share a base shape (budget check, retrieval call, LLM call, event logging, error handling) and each return structured Findings",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "agents/",
+        "tests/test_specialist_agents.py"
+      ],
+      "dependencies": [
+        "orchestrator-3",
+        "retrieval-layer-3"
+      ],
+      "requirements": [
+        "AC-3"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_specialist_agents.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/specialist-agents-3-unit-276473f3-5582-4f9f-8d1d-b3d32b498f39.json",
+            "hash": "f82dbaa26274c8b34458533d6e55af9f6b2c4c70dcead11054d7f722b3d4ce97",
+            "source_hash": "1ba899a4fe6a64e4da0bb2dd7743e9176e6da37e7e1132d13eceb3ef37edb769",
+            "config_hash": "158602bd47099e5049399a82c44e302993956ad718b73aa587ae14143a218f40",
+            "observed_at": "2026-09-09T03:55:11.617Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/specialist-agents-3-independent-review-9dd96512-186d-484a-8b82-feb55a8687cd.json",
+            "hash": "cf79d60684e6b951462ffe9ed38522e488ffbbfc8ebe21b4ae0ecd903151ae8e",
+            "source_hash": "1ba899a4fe6a64e4da0bb2dd7743e9176e6da37e7e1132d13eceb3ef37edb769",
+            "config_hash": "158602bd47099e5049399a82c44e302993956ad718b73aa587ae14143a218f40",
+            "observed_at": "2026-09-09T03:58:00.026Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:03.084Z",
+      "updated_at": "2026-09-09T03:58:03.209Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    },
+    {
+      "id": "aggregator-3",
+      "outcome": "Aggregator node waits for all 4 specialists, merges and de-duplicates findings, computes one overall confidence score",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "orchestrator/aggregator.py",
+        "tests/test_aggregator.py"
+      ],
+      "dependencies": [
+        "specialist-agents-3"
+      ],
+      "requirements": [
+        "FR-6"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_aggregator.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/aggregator-3-unit-b9651615-180c-4cfa-97fe-8ddf097b1ce8.json",
+            "hash": "52e16d3aa36dcea46993e7f3220b488cfcf7a80f03a202f9eb7e944720da2d93",
+            "source_hash": "429d54e694902ddd7c335c2e509373ce53141f18ba004b09fd5fbb6da5bec02e",
+            "config_hash": "4cf6060137054a36462ecfc81dfbe1d59d16c9556b393af08967969c14599a0d",
+            "observed_at": "2026-09-09T03:58:57.483Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:04.348Z",
+      "updated_at": "2026-09-09T03:59:00.507Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "agents/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "agents/anthropic_client.py": "e15558eca8cd44da166d4996d25d2eb543bb2eeedd5a1b11bb3ade1098396ce5",
+        "agents/base.py": "994c57d956f730f144f854013d2e85062d312940825861905743ebd5e46db58d",
+        "agents/specialists.py": "8a10625a0633e88b54a9f56bf2430454b441bb57e350878870a171e30ddd4caa",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_specialist_agents.py": "c1192d48cb9059d06e635e02b1079a98d31b93f505d78b52864eb3edc0432835",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    },
+    {
+      "id": "budget-guard-3",
+      "outcome": "BudgetGuard checks a live cost rollup before each LLM call and hard-blocks calls once the daily spend cap is reached",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "reliability/budget_guard.py",
+        "tests/test_budget_guard.py"
+      ],
+      "dependencies": [
+        "data-layer-2"
+      ],
+      "requirements": [
+        "FR-11",
+        "NFR-6",
+        "AC-7"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_budget_guard.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/budget-guard-3-unit-35590579-271d-4ab4-9278-6d0ad6e5658b.json",
+            "hash": "1e72bdf0cbce0d09779e0d00e81f1fdb262658a176983a36921e1d8e9cc7a90f",
+            "source_hash": "cb5eb1a5514aa6b0ac417a71a4b34fdb1127a14f6a9428258436b515ac1d9372",
+            "config_hash": "a9696049d03bfa14b0d6580b29bf8ae06f07a52b0243fbd37dd81368d4febcab",
+            "observed_at": "2026-09-09T04:02:38.725Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/budget-guard-3-independent-review-c7283ea4-0433-4ad5-bfc0-e89954fa42f5.json",
+            "hash": "02eed65b0f7cdaadfca2c47f1dc9abceb724fe09a419f614e90788419667598c",
+            "source_hash": "cb5eb1a5514aa6b0ac417a71a4b34fdb1127a14f6a9428258436b515ac1d9372",
+            "config_hash": "a9696049d03bfa14b0d6580b29bf8ae06f07a52b0243fbd37dd81368d4febcab",
+            "observed_at": "2026-09-09T04:03:06.611Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:05.588Z",
+      "updated_at": "2026-09-09T04:03:12.330Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "agents/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "agents/anthropic_client.py": "e15558eca8cd44da166d4996d25d2eb543bb2eeedd5a1b11bb3ade1098396ce5",
+        "agents/base.py": "994c57d956f730f144f854013d2e85062d312940825861905743ebd5e46db58d",
+        "agents/specialists.py": "8a10625a0633e88b54a9f56bf2430454b441bb57e350878870a171e30ddd4caa",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/aggregator.py": "eb947c3f49482979858dbdcc0b2b7b286d85eede396151025d662ff558fb97c8",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_aggregator.py": "c5b7f770a49499eeeb6b96c9a5f12ac0e3992b16148391ea58d5ae02241b82bf",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_specialist_agents.py": "c1192d48cb9059d06e635e02b1079a98d31b93f505d78b52864eb3edc0432835",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    },
+    {
+      "id": "hitl-gate-3",
+      "outcome": "Confidence-weighted gate: CRITICAL always escalates, below-threshold confidence routes to human queue, otherwise auto-post",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "core/hitl_gate.py",
+        "tests/test_hitl_gate.py"
+      ],
+      "dependencies": [
+        "aggregator-3"
+      ],
+      "requirements": [
+        "FR-7",
+        "AC-4",
+        "AC-5"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_hitl_gate.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/hitl-gate-3-unit-75ff0d3a-b12d-4ad0-ae9b-d3954cf9f1cb.json",
+            "hash": "a28bf64e053e6b312f0274a0c5543629d201bc229ee330adf03a26d0a9738a6a",
+            "source_hash": "59163d59605d57bf4a4381c6f3fa3524f326f6316f94fcc157a79aa1c0a01829",
+            "config_hash": "1a38d94f255a98647c81412a6f46d6bba46e9787cf506a1c32f36e2fa84a3825",
+            "observed_at": "2026-09-09T04:04:28.079Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/hitl-gate-3-independent-review-db6cfb9a-fbab-4baf-9201-1df866aac53f.json",
+            "hash": "7406ba7c4cb4fc57b419f5961cdff473933618782b2626161a04b98ccf1710ee",
+            "source_hash": "59163d59605d57bf4a4381c6f3fa3524f326f6316f94fcc157a79aa1c0a01829",
+            "config_hash": "1a38d94f255a98647c81412a6f46d6bba46e9787cf506a1c32f36e2fa84a3825",
+            "observed_at": "2026-09-09T04:08:43.313Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:06.983Z",
+      "updated_at": "2026-09-09T04:08:48.998Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "agents/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "agents/anthropic_client.py": "e15558eca8cd44da166d4996d25d2eb543bb2eeedd5a1b11bb3ade1098396ce5",
+        "agents/base.py": "994c57d956f730f144f854013d2e85062d312940825861905743ebd5e46db58d",
+        "agents/specialists.py": "8a10625a0633e88b54a9f56bf2430454b441bb57e350878870a171e30ddd4caa",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/aggregator.py": "eb947c3f49482979858dbdcc0b2b7b286d85eede396151025d662ff558fb97c8",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "reliability/budget_guard.py": "f242fb215f0cb9da9806a849cb3dda1cf640f94e65eb7b7b879868b8d1248e62",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_aggregator.py": "c5b7f770a49499eeeb6b96c9a5f12ac0e3992b16148391ea58d5ae02241b82bf",
+        "tests/test_budget_guard.py": "9a3c27e7f3dc50d8c009aa0c47c54dd02d839b558923331671f1c86f81ae33f1",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_specialist_agents.py": "c1192d48cb9059d06e635e02b1079a98d31b93f505d78b52864eb3edc0432835",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    },
+    {
+      "id": "github-poster-3",
+      "outcome": "Posts the structured, HITL-approved review back to GitHub with findings attached to specific files/lines",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "tools/github_client.py",
+        "tests/test_github_poster.py"
+      ],
+      "dependencies": [
+        "hitl-gate-3"
+      ],
+      "requirements": [
+        "FR-8"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_github_poster.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/github-poster-3-unit-5b0995c7-b6c6-430a-9f43-8f75511f4123.json",
+            "hash": "dd22676f65043abc27e178df04cb7accada1f89e5028fbb9146ee58e7175517a",
+            "source_hash": "e1489ef6cdc440ad2e0f8cf969fca9d8023f4b7e6f6d56a08960c38f1830e431",
+            "config_hash": "625e75d90ce689939a5f0003811101f083cb8d919082e827d045c0a2346c0bb9",
+            "observed_at": "2026-09-09T04:10:11.101Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/github-poster-3-independent-review-b40b72c0-b452-45cb-afeb-384976b0bdb2.json",
+            "hash": "7f036ec8c65059457cbd323831de9b963bfe4e00523bc2432fbefc27206cc94a",
+            "source_hash": "e1489ef6cdc440ad2e0f8cf969fca9d8023f4b7e6f6d56a08960c38f1830e431",
+            "config_hash": "625e75d90ce689939a5f0003811101f083cb8d919082e827d045c0a2346c0bb9",
+            "observed_at": "2026-09-09T04:26:38.843Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:08.338Z",
+      "updated_at": "2026-09-09T04:26:46.035Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "agents/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "agents/anthropic_client.py": "e15558eca8cd44da166d4996d25d2eb543bb2eeedd5a1b11bb3ade1098396ce5",
+        "agents/base.py": "994c57d956f730f144f854013d2e85062d312940825861905743ebd5e46db58d",
+        "agents/specialists.py": "8a10625a0633e88b54a9f56bf2430454b441bb57e350878870a171e30ddd4caa",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "core/hitl_gate.py": "f7f05ea5a29ec60def7d2f1043f9e753e477e8e1e2ffc26b1328b3352f18e6e7",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/aggregator.py": "eb947c3f49482979858dbdcc0b2b7b286d85eede396151025d662ff558fb97c8",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "reliability/budget_guard.py": "f242fb215f0cb9da9806a849cb3dda1cf640f94e65eb7b7b879868b8d1248e62",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_aggregator.py": "c5b7f770a49499eeeb6b96c9a5f12ac0e3992b16148391ea58d5ae02241b82bf",
+        "tests/test_budget_guard.py": "9a3c27e7f3dc50d8c009aa0c47c54dd02d839b558923331671f1c86f81ae33f1",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_hitl_gate.py": "300984d6133d0efe410264a3dd99400c221aa4ab871c8dc80e809de241ba206a",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_specialist_agents.py": "c1192d48cb9059d06e635e02b1079a98d31b93f505d78b52864eb3edc0432835",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    },
+    {
+      "id": "events-log-3",
+      "outcome": "Every agent action (span, LLM call, tool call, decision) is written to the append-only events table; a review is fully reconstructable and grounding is verifiable from it",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "observability/",
+        "tests/test_events_log.py"
+      ],
+      "dependencies": [
+        "data-layer-2",
+        "retrieval-layer-3"
+      ],
+      "requirements": [
+        "AC-6"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_events_log.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/events-log-3-unit-ba17b93b-1d68-4be3-a775-b6f827def2f1.json",
+            "hash": "139a4a538e68dd898b87112f5702ca231e0ae78e6deeb43d4b665b808235b53d",
+            "source_hash": "a9db54e2b5578483ae9b09689c8e67c5d79a3be938c160d67e061fe995cc49f1",
+            "config_hash": "22a694f0205ced19ea253be6f9fb233333cd8321e958ee1fce8df2261da99a15",
+            "observed_at": "2026-09-09T04:28:21.181Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:10.082Z",
+      "updated_at": "2026-09-09T04:28:35.369Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "agents/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "agents/anthropic_client.py": "e15558eca8cd44da166d4996d25d2eb543bb2eeedd5a1b11bb3ade1098396ce5",
+        "agents/base.py": "994c57d956f730f144f854013d2e85062d312940825861905743ebd5e46db58d",
+        "agents/specialists.py": "8a10625a0633e88b54a9f56bf2430454b441bb57e350878870a171e30ddd4caa",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "core/hitl_gate.py": "f7f05ea5a29ec60def7d2f1043f9e753e477e8e1e2ffc26b1328b3352f18e6e7",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/aggregator.py": "eb947c3f49482979858dbdcc0b2b7b286d85eede396151025d662ff558fb97c8",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "reliability/budget_guard.py": "f242fb215f0cb9da9806a849cb3dda1cf640f94e65eb7b7b879868b8d1248e62",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_aggregator.py": "c5b7f770a49499eeeb6b96c9a5f12ac0e3992b16148391ea58d5ae02241b82bf",
+        "tests/test_budget_guard.py": "9a3c27e7f3dc50d8c009aa0c47c54dd02d839b558923331671f1c86f81ae33f1",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_github_poster.py": "696c932b17125d2770af0f4821f7f99cfda6d95a2b763b960424480499315ebf",
+        "tests/test_hitl_gate.py": "300984d6133d0efe410264a3dd99400c221aa4ab871c8dc80e809de241ba206a",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_specialist_agents.py": "c1192d48cb9059d06e635e02b1079a98d31b93f505d78b52864eb3edc0432835",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/github_client.py": "497edbc94ad9a1277141eee6a3f129c4a4aa52a152bc63a74b9b8906ff736156",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    },
+    {
+      "id": "dispute-flow-3",
+      "outcome": "Developer disputes on a posted finding are recorded as feedback and require a minimum evidence threshold before influencing future behavior",
+      "state": "done",
+      "risk": "low",
+      "owner": null,
+      "scope": [
+        "core/disputes.py",
+        "tests/test_dispute_flow.py"
+      ],
+      "dependencies": [
+        "github-poster-3"
+      ],
+      "requirements": [
+        "FR-9"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_dispute_flow.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/dispute-flow-3-unit-465392a2-5e31-49ba-8919-36829a97b020.json",
+            "hash": "44e9b4fe1bac49077912c68d90dea249d815f5e193b48602ebd4f02f1079cc51",
+            "source_hash": "03986a886a84ca756e6b76e27bc61a5c727e3aea3bdee09d616093eeae3572df",
+            "config_hash": "5f5cf40f43161a4e40d54987bd4554df7ffef50094f27455623748506c1bc193",
+            "observed_at": "2026-09-09T04:29:57.545Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T03:41:11.768Z",
+      "updated_at": "2026-09-09T04:30:05.569Z",
+      "base_manifest": {
+        ".gitignore": "601911310eae462e207f6f64490b4f187f27e9ec9876ff1f252f9fdfbca1cd3a",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "agents/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "agents/anthropic_client.py": "e15558eca8cd44da166d4996d25d2eb543bb2eeedd5a1b11bb3ade1098396ce5",
+        "agents/base.py": "994c57d956f730f144f854013d2e85062d312940825861905743ebd5e46db58d",
+        "agents/specialists.py": "8a10625a0633e88b54a9f56bf2430454b441bb57e350878870a171e30ddd4caa",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "core/hitl_gate.py": "f7f05ea5a29ec60def7d2f1043f9e753e477e8e1e2ffc26b1328b3352f18e6e7",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "observability/events.py": "d8d83a56ab93c824d93301d3e065d3ff9f0796b6992987fae33e1c59cd528233",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/aggregator.py": "eb947c3f49482979858dbdcc0b2b7b286d85eede396151025d662ff558fb97c8",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "reliability/budget_guard.py": "f242fb215f0cb9da9806a849cb3dda1cf640f94e65eb7b7b879868b8d1248e62",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_aggregator.py": "c5b7f770a49499eeeb6b96c9a5f12ac0e3992b16148391ea58d5ae02241b82bf",
+        "tests/test_budget_guard.py": "9a3c27e7f3dc50d8c009aa0c47c54dd02d839b558923331671f1c86f81ae33f1",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_events_log.py": "85454bb246553bcabe06b7b8a153a783758b1836cda4a57ad96de195a1086ba3",
+        "tests/test_github_poster.py": "696c932b17125d2770af0f4821f7f99cfda6d95a2b763b960424480499315ebf",
+        "tests/test_hitl_gate.py": "300984d6133d0efe410264a3dd99400c221aa4ab871c8dc80e809de241ba206a",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_specialist_agents.py": "c1192d48cb9059d06e635e02b1079a98d31b93f505d78b52864eb3edc0432835",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/github_client.py": "497edbc94ad9a1277141eee6a3f129c4a4aa52a152bc63a74b9b8906ff736156",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    },
+    {
+      "id": "wire-app",
+      "outcome": "A single FastAPI app + ARQ worker that wires webhook receipt -> orchestrator+specialists -> aggregator -> HITL gate -> GitHub poster into one runnable pipeline, proven end-to-end with a fake GitHub API and fake LLM but the real database",
+      "state": "done",
+      "risk": "medium",
+      "owner": null,
+      "scope": [
+        "app/",
+        "tests/test_end_to_end.py"
+      ],
+      "dependencies": [],
+      "requirements": [
+        "FR-4",
+        "FR-7",
+        "FR-8"
+      ],
+      "inputs": [],
+      "environment": [],
+      "scenarios": [],
+      "gates": [
+        {
+          "id": "unit",
+          "kind": "command",
+          "command": "python -m pytest tests/test_end_to_end.py -q",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/wire-app-unit-c63ac69e-75eb-47fd-a500-db6ff1154d63.json",
+            "hash": "2e4dd401945f811b0a03baebba4f6ee1b8bd45506bf3c9ee0fc00e5d22bef2fe",
+            "source_hash": "2d0c36dd0d16f27b646b6374c8716cd4f8d437e7661dc987ed7aa7471abd3a6b",
+            "config_hash": "80cd4eb24fce70630f9f008a36227a4bfa9a5b9557f43fcadfe88a6be986d333",
+            "observed_at": "2026-09-09T06:09:21.805Z"
+          }
+        },
+        {
+          "id": "independent-review",
+          "kind": "review",
+          "command": "",
+          "mandatory": true,
+          "status": "pass",
+          "evidence": {
+            "path": ".genesis/evidence/wire-app-independent-review-21d45661-6443-4e82-bc38-da2ebfa3c710.json",
+            "hash": "22b17ded3cc25ea74b0e4b14cdf8f5aee582510d7c515ab1142c992b058813c8",
+            "source_hash": "2d0c36dd0d16f27b646b6374c8716cd4f8d437e7661dc987ed7aa7471abd3a6b",
+            "config_hash": "80cd4eb24fce70630f9f008a36227a4bfa9a5b9557f43fcadfe88a6be986d333",
+            "observed_at": "2026-09-09T06:19:11.097Z"
+          }
+        }
+      ],
+      "next_action": "Run the task pre-flight.",
+      "blocker": null,
+      "notes": [],
+      "failures": [],
+      "limitations": [],
+      "created_at": "2026-09-09T06:05:59.657Z",
+      "updated_at": "2026-09-09T06:19:15.190Z",
+      "base_manifest": {
+        ".gitignore": "098883b7902d57593f46e060227a792d196dc2d54900b89408210d7307c75921",
+        "AGENTS.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "CLAUDE.md": "a67615d8ed1ed3dd1b0d2cbf874ceb8d4a285c3335cdfc2d785ec80a06daecc1",
+        "SPEC.md": "88fdf6ce1a8ce7f176c5e302af05372427f7044180034810c566f69a2f225921",
+        "agents/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "agents/anthropic_client.py": "e15558eca8cd44da166d4996d25d2eb543bb2eeedd5a1b11bb3ade1098396ce5",
+        "agents/base.py": "994c57d956f730f144f854013d2e85062d312940825861905743ebd5e46db58d",
+        "agents/specialists.py": "8a10625a0633e88b54a9f56bf2430454b441bb57e350878870a171e30ddd4caa",
+        "app/webhook_receiver/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "app/webhook_receiver/main.py": "1e1f0b6eaeb22a26196f7497a8e0abe47d168751077b685450329727834b01e3",
+        "app/webhook_receiver/queue.py": "20fff1f52080054806d36e23c4ea267f522a08f98f9407b0751c5bc360bd2640",
+        "app/webhook_receiver/signature.py": "2e4c433639d1b163c8c5024bbabf198d4a7e8c0e4e14c802d6d26aa6d4ce2209",
+        "core/disputes.py": "95ea0dabcb1f17f7dfefd754d6c0e016cda916fc1467b3678e56d0a6cd9b306e",
+        "core/hitl_gate.py": "f7f05ea5a29ec60def7d2f1043f9e753e477e8e1e2ffc26b1328b3352f18e6e7",
+        "data/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "data/config.py": "150acf01f1ffa9a3feb251de71569f3ea8658baa85030ec3996ec22e2c3b5b75",
+        "data/db.py": "9bd9c2b2f53889d971433b3ecf7e896c97d9b651edd0a2b68e898ae6e6da3119",
+        "migrations/0001_init.sql": "f344cda48040898b84e18783f346542fb1f3f4df37317ad3e4d1ce50f891c5a6",
+        "observability/events.py": "d8d83a56ab93c824d93301d3e065d3ff9f0796b6992987fae33e1c59cd528233",
+        "orchestrator/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "orchestrator/aggregator.py": "eb947c3f49482979858dbdcc0b2b7b286d85eede396151025d662ff558fb97c8",
+        "orchestrator/graph.py": "8762373b87f15045d026594485e79c44573f9c04c5b41c85fda5408bff71408c",
+        "reliability/budget_guard.py": "f242fb215f0cb9da9806a849cb3dda1cf640f94e65eb7b7b879868b8d1248e62",
+        "requirements.txt": "315ec5c7cfc1462de91138eb2c98139c1e61bb43e9597e457249a06be3e20790",
+        "tests/test_aggregator.py": "c5b7f770a49499eeeb6b96c9a5f12ac0e3992b16148391ea58d5ae02241b82bf",
+        "tests/test_budget_guard.py": "9a3c27e7f3dc50d8c009aa0c47c54dd02d839b558923331671f1c86f81ae33f1",
+        "tests/test_data_layer.py": "97ce93ec3ce2c1681b5fdf94c2b6b34f741a12dc78b45256cc179fdbd51e2957",
+        "tests/test_dispute_flow.py": "040e6a985a11984030b32000c302a3ea2018a9aa8c3562072d681def4b3411b7",
+        "tests/test_events_log.py": "85454bb246553bcabe06b7b8a153a783758b1836cda4a57ad96de195a1086ba3",
+        "tests/test_github_poster.py": "696c932b17125d2770af0f4821f7f99cfda6d95a2b763b960424480499315ebf",
+        "tests/test_hitl_gate.py": "300984d6133d0efe410264a3dd99400c221aa4ab871c8dc80e809de241ba206a",
+        "tests/test_orchestrator.py": "734f1100e9b7086d933d552d092ad6c6c23c8b1be566cc4316829fe8b6ffd035",
+        "tests/test_retrieval.py": "daa27d349d164b183679834c928897f8fa27cee15de1c31b619b348e95ef0b15",
+        "tests/test_specialist_agents.py": "c1192d48cb9059d06e635e02b1079a98d31b93f505d78b52864eb3edc0432835",
+        "tests/test_webhook_ingress.py": "2578400b3b298e064bfad723a970f7f761cdffcbaee5ce374b9e69b793a19b1f",
+        "tools/github_client.py": "497edbc94ad9a1277141eee6a3f129c4a4aa52a152bc63a74b9b8906ff736156",
+        "tools/retrieval/__init__.py": "78fb5f112b9e331e6d45cc7ba20c364344137c40dce44296fbdbe7854ba5bea2",
+        "tools/retrieval/hybrid.py": "081d50735b44a5685b1d0ad959dd1c4018b4bc0687f5a5026132287ca7e49196"
+      }
+    }
+  ],
+  "learning_proposals": [],
+  "cleanup_proposals": [],
+  "controls": [
+    {
+      "id": "4c7e4af9-ddcc-4001-8b39-576c9123fe6e",
+      "at": "2026-09-09T00:07:07.403Z",
+      "action": "approve",
+      "task": "webhook-ingress",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing test proof, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "795b8936-9d33-473b-ad75-bf36f4091586",
+      "at": "2026-09-09T00:11:02.501Z",
+      "action": "approve",
+      "task": "webhook-ingress",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Re-reviewed after scope cleanup (removed requirements.txt/pycache from diff), same implementation, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "cdb3a00b-1082-4bd9-9781-0d813c94e413",
+      "at": "2026-09-09T00:12:25.885Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "14ff2f89-f309-4b90-a5bb-a460a618d75d",
+      "at": "2026-09-09T00:12:47.093Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "0862912a-ed90-45d8-997a-b86777aa52b8",
+      "at": "2026-09-09T00:12:47.912Z",
+      "action": "resume",
+      "task": "project-scaffold",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "bc86ae25-7bb4-4e95-ac13-b858ef75ec8b",
+      "at": "2026-09-09T02:44:09.669Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "82f440ab-4efa-450e-bbfe-628ff5bf30b7",
+      "at": "2026-09-09T02:44:20.440Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "d3c6c602-2df3-4451-afee-8d0ea05a8169",
+      "at": "2026-09-09T02:44:21.063Z",
+      "action": "resume",
+      "task": "secure-env-file",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "f417d01c-394c-47a1-bd47-40284d823e60",
+      "at": "2026-09-09T02:45:11.613Z",
+      "action": "reject",
+      "task": "secure-env-file",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "660a5840-d5ce-414f-bc62-90c0cef5e5d0",
+      "at": "2026-09-09T02:45:25.121Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "b944a366-733e-495c-a5eb-932ed8817081",
+      "at": "2026-09-09T02:45:25.775Z",
+      "action": "resume",
+      "task": "secure-env-file-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "4b2d9687-6463-4cf7-903d-aedfb86a1297",
+      "at": "2026-09-09T02:46:33.393Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "2f166260-9225-41d2-8685-1d3bfdfd435c",
+      "at": "2026-09-09T02:46:41.586Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "0f02fa9c-9bb0-4620-a66c-29c9e70e655d",
+      "at": "2026-09-09T02:46:43.088Z",
+      "action": "resume",
+      "task": "add-db-dependencies",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "51139125-dcf5-4075-878d-b4513833c625",
+      "at": "2026-09-09T03:30:18.723Z",
+      "action": "approve",
+      "task": "data-layer",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed schema/migrations and passing test proof against live Tiger Cloud instance, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "9a6a5679-6c32-4d9b-aa4c-f6777e22fe65",
+      "at": "2026-09-09T03:31:05.941Z",
+      "action": "requeue",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "df304411-bf4c-481d-a812-b19a8981a8f8",
+      "at": "2026-09-09T03:31:08.288Z",
+      "action": "reject",
+      "task": "orchestrator",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "ba0c7eae-a670-4078-a656-1a67c7f91c79",
+      "at": "2026-09-09T03:31:09.410Z",
+      "action": "reject",
+      "task": "retrieval-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "a3db9f37-2f95-4e8d-8f0b-58fb5238ae9c",
+      "at": "2026-09-09T03:31:10.569Z",
+      "action": "reject",
+      "task": "specialist-agents",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "6a72b39f-341a-491b-ba86-a0a8032196af",
+      "at": "2026-09-09T03:31:11.549Z",
+      "action": "reject",
+      "task": "aggregator",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "be682c7a-ae3c-4c80-b346-b70db5c2d5dd",
+      "at": "2026-09-09T03:31:12.475Z",
+      "action": "reject",
+      "task": "budget-guard",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "c04eadf2-6e3c-4ca2-8910-b70597d48879",
+      "at": "2026-09-09T03:31:13.383Z",
+      "action": "reject",
+      "task": "hitl-gate",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "afab5b62-3426-474d-826f-d2c9b1bcc9b5",
+      "at": "2026-09-09T03:31:14.313Z",
+      "action": "reject",
+      "task": "github-poster",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "de63d0f6-7f91-4cca-af6b-9bde3ca16a17",
+      "at": "2026-09-09T03:31:15.284Z",
+      "action": "reject",
+      "task": "events-log",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "27176066-e43f-428b-8bee-b1a0844bc301",
+      "at": "2026-09-09T03:31:16.244Z",
+      "action": "reject",
+      "task": "dispute-flow",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "8451ffbf-018f-44cd-85c3-8ce7891c1840",
+      "at": "2026-09-09T03:31:17.276Z",
+      "action": "reject",
+      "task": "data-layer",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "3d0885b6-b0e9-4517-b20e-a00b3794796e",
+      "at": "2026-09-09T03:32:19.637Z",
+      "action": "approve",
+      "task": "data-layer-2",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Same schema/migrations previously reviewed under data-layer; recreated only to fix a stale scope baseline, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "d9d2797a-958a-4de6-806d-d0c88aa1216a",
+      "at": "2026-09-09T03:34:51.403Z",
+      "action": "requeue",
+      "task": "orchestrator-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "a2d47f22-0909-4e65-a173-f9f791472be2",
+      "at": "2026-09-09T03:34:58.362Z",
+      "action": "requeue",
+      "task": "orchestrator-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "eb6e3dbd-af5d-4d83-ba33-f367fcf23884",
+      "at": "2026-09-09T03:34:59.528Z",
+      "action": "resume",
+      "task": "add-langgraph-dependency",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "cc07d3cc-38a0-4ff9-8257-746def3d6074",
+      "at": "2026-09-09T03:39:38.200Z",
+      "action": "approve",
+      "task": "orchestrator-2",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing test proof (incl. empirical crash-resume test), 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "7238978e-e6cf-4547-9067-28165ff9a9b2",
+      "at": "2026-09-09T03:39:58.609Z",
+      "action": "requeue",
+      "task": "orchestrator-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "09b6b156-fd10-49ea-88fa-db1a375f38d6",
+      "at": "2026-09-09T03:40:01.176Z",
+      "action": "reject",
+      "task": "retrieval-layer-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "68fca1d1-81c4-4fa2-8061-01229c5a8f39",
+      "at": "2026-09-09T03:40:02.518Z",
+      "action": "reject",
+      "task": "specialist-agents-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "4529c1a6-caee-46df-9175-78c833b22c8f",
+      "at": "2026-09-09T03:40:03.856Z",
+      "action": "reject",
+      "task": "aggregator-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "e2538ac2-8c69-4a0b-8180-d73c37129a51",
+      "at": "2026-09-09T03:40:05.381Z",
+      "action": "reject",
+      "task": "budget-guard-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "c7baae4b-d674-41bd-a73b-67539959f626",
+      "at": "2026-09-09T03:40:07.057Z",
+      "action": "reject",
+      "task": "hitl-gate-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "1a796a27-329b-4837-ab8c-e1dfe3974820",
+      "at": "2026-09-09T03:40:08.740Z",
+      "action": "reject",
+      "task": "github-poster-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "e05f0bb5-cdfb-4b69-a740-4e61abd08ce0",
+      "at": "2026-09-09T03:40:10.326Z",
+      "action": "reject",
+      "task": "events-log-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "efc187c8-b1a3-430a-b434-b656d877c552",
+      "at": "2026-09-09T03:40:11.728Z",
+      "action": "reject",
+      "task": "dispute-flow-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "cd4fd805-22f8-4d68-ae0c-1d8091ef4c40",
+      "at": "2026-09-09T03:40:13.193Z",
+      "action": "reject",
+      "task": "orchestrator-2",
+      "human": null,
+      "reason": null,
+      "revision": null
+    },
+    {
+      "id": "09c565ce-92c5-4b60-a83a-4d841022b10e",
+      "at": "2026-09-09T03:41:58.546Z",
+      "action": "approve",
+      "task": "orchestrator-3",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Same implementation previously reviewed under orchestrator-2; recreated only to fix stale scope baseline, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "479e4c35-26b0-40a4-9f46-7275eb5ee06f",
+      "at": "2026-09-09T03:53:27.990Z",
+      "action": "approve",
+      "task": "retrieval-layer-3",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing test proof against live Tiger Cloud, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "9dd96512-186d-484a-8b82-feb55a8687cd",
+      "at": "2026-09-09T03:58:00.026Z",
+      "action": "approve",
+      "task": "specialist-agents-3",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing test proof, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "3f441d71-1a05-4042-8976-8c92fbca8a87",
+      "at": "2026-09-09T04:01:33.263Z",
+      "action": "approve",
+      "task": "budget-guard-3",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing test proof against live Tiger Cloud, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "c7283ea4-0433-4ad5-bfc0-e89954fa42f5",
+      "at": "2026-09-09T04:03:06.611Z",
+      "action": "approve",
+      "task": "budget-guard-3",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Re-reviewed after removing unnecessary reliability/__init__.py; same implementation, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "db6cfb9a-fbab-4baf-9201-1df866aac53f",
+      "at": "2026-09-09T04:08:43.313Z",
+      "action": "approve",
+      "task": "hitl-gate-3",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing test proof, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "b40b72c0-b452-45cb-afeb-384976b0bdb2",
+      "at": "2026-09-09T04:26:38.843Z",
+      "action": "approve",
+      "task": "github-poster-3",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing test proof, 2026-09-09",
+      "revision": null
+    },
+    {
+      "id": "21d45661-6443-4e82-bc38-da2ebfa3c710",
+      "at": "2026-09-09T06:19:11.097Z",
+      "action": "approve",
+      "task": "wire-app",
+      "human": "utsavkumar1283@gmail.com",
+      "reason": "Reviewed diff and passing end-to-end test proof against live Tiger Cloud, 2026-09-09",
+      "revision": null
+    }
+  ],
+  "attempts": [
+    {
+      "id": "ce8e2259-99b1-4fa0-9d93-e0739b2032fd",
+      "task": "webhook-ingress",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_webhook_ingress.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 16288,
+      "child_pid": 26564,
+      "started_at": "2026-09-09T00:06:26.403Z",
+      "status": "passed",
+      "before_hash": "8c2ae4d17421db5c1381a23fed82ceb9134401c8a8f7423f60dd2cc6b2529e56",
+      "config_hash": "2810bfed2da0057643b3ee0072f9493bb1e3d1bbd3bfd8e093aa3b5257738efe",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T00:06:30.615Z"
+    },
+    {
+      "id": "6bc14734-fdcd-446f-9ebe-e00344cb7fd8",
+      "task": "webhook-ingress",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_webhook_ingress.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 21652,
+      "child_pid": 12840,
+      "started_at": "2026-09-09T00:09:03.943Z",
+      "status": "passed",
+      "before_hash": "037a14181aa39e634c51da0ded423682d9c88e6cd8a1a1bacb1484ad47b64786",
+      "config_hash": "2810bfed2da0057643b3ee0072f9493bb1e3d1bbd3bfd8e093aa3b5257738efe",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T00:09:08.974Z"
+    },
+    {
+      "id": "972118fa-7f79-4f34-ae91-1f7951fa4b41",
+      "task": "project-scaffold",
+      "kind": "gate",
+      "command": "python -m pip install -r requirements.txt",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 30488,
+      "child_pid": 14812,
+      "started_at": "2026-09-09T00:13:06.383Z",
+      "status": "passed",
+      "before_hash": "ed45cddc3f95ae5d1b571063962e3c0ab64ad764ae3d48d8e05edb635a70cb23",
+      "config_hash": "c54d7b50086c780138dfc137539de00b640887d23dcfe7da5830791b8a8e8cf5",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T00:13:12.819Z"
+    },
+    {
+      "id": "a55545c1-50e2-4dbe-a8eb-7fd1be8ff856",
+      "task": "secure-env-file",
+      "kind": "gate",
+      "command": "git check-ignore -q .env",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 10564,
+      "child_pid": 27476,
+      "started_at": "2026-09-09T02:44:36.432Z",
+      "status": "passed",
+      "before_hash": "27ec5eb0e74c16b64b03cf992983244a89387a8b1f1b941b5207d74bc6c77245",
+      "config_hash": "b30a3be782a1eb59e215414c0e65ea9610a2e346a24aa3608ed936ed0ed5e5c7",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T02:44:37.669Z"
+    },
+    {
+      "id": "148af7cc-3753-4ba9-b39f-43cc1cfe96f0",
+      "task": "secure-env-file-2",
+      "kind": "gate",
+      "command": "git check-ignore -q .env",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 5576,
+      "child_pid": 26196,
+      "started_at": "2026-09-09T02:45:26.514Z",
+      "status": "passed",
+      "before_hash": "7d4c8a5a133f49ce5879d5381887104ab826dcbe06c17048eeeac45e2dc32dab",
+      "config_hash": "88ba45ed18e5fd89f7e12e7ef2c52e2f03559f83b06de7b794b12c468a72868d",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T02:45:27.681Z"
+    },
+    {
+      "id": "7dd3c261-f67e-4109-9442-d2a7e5fa6c96",
+      "task": "add-db-dependencies",
+      "kind": "gate",
+      "command": "python -m pip install -r requirements.txt",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 28972,
+      "child_pid": 10280,
+      "started_at": "2026-09-09T02:46:59.626Z",
+      "status": "passed",
+      "before_hash": "464f7465345b7aab99b61ef916710065eccf23f125aeff1e558af307ad207a3f",
+      "config_hash": "2be3c34462766dc35fc1b81b6fe7d090ad21f3557c48fb60968cbd0217f82561",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T02:47:09.654Z"
+    },
+    {
+      "id": "d8018372-103e-411b-8fb4-447a1b43a5b7",
+      "task": "data-layer",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_data_layer.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 25716,
+      "child_pid": 24696,
+      "started_at": "2026-09-09T02:49:49.939Z",
+      "status": "passed",
+      "before_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+      "config_hash": "5101211f1a62e2138fd8643f38e352a98eb9af8c0079ac6a82111d35f90a7f8b",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T02:49:59.704Z"
+    },
+    {
+      "id": "33e94c97-b10c-497d-8898-7241a726b1b9",
+      "task": "data-layer-2",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_data_layer.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 12224,
+      "child_pid": 32580,
+      "started_at": "2026-09-09T03:32:04.041Z",
+      "status": "passed",
+      "before_hash": "6cf1c07d500e82acc136179840f95cbe315f5c467859cfeff7b5646e0fe5da17",
+      "config_hash": "ee21f563882dc9d43083f32f6eefca4c39c2a45bf68844560b38d15097bfe967",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:32:10.615Z"
+    },
+    {
+      "id": "b64018b9-4ac9-4daa-855e-b09348ae7dac",
+      "task": "add-langgraph-dependency",
+      "kind": "gate",
+      "command": "python -m pip install -r requirements.txt",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 4368,
+      "child_pid": 16744,
+      "started_at": "2026-09-09T03:35:17.723Z",
+      "status": "passed",
+      "before_hash": "9d3b548d205353106959c2d56a81d6802025f9881157ce68012feb89a4add101",
+      "config_hash": "fb5c3822bcd0b18944a80ed3d871385987af70b5304895d3fc1fbe57f5f804fd",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:35:21.703Z"
+    },
+    {
+      "id": "413ec8e0-f692-4e6c-955a-54dcc5128cdc",
+      "task": "orchestrator-2",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_orchestrator.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 32696,
+      "child_pid": 152,
+      "started_at": "2026-09-09T03:37:14.368Z",
+      "status": "passed",
+      "before_hash": "bb9bb24dae7981bbb09213e259376ae7f91eed8fd10169cadce0dd1b6ca45d6f",
+      "config_hash": "7b30437e4beb4bdfbc4e78a5d3e6118fcd445a1b382cecba565740f7869097df",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:37:19.493Z"
+    },
+    {
+      "id": "6da1b21d-8beb-426e-b445-1e66131b6162",
+      "task": "add-anthropic-dependency",
+      "kind": "gate",
+      "command": "python -m pip install -r requirements.txt",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 29896,
+      "child_pid": 16724,
+      "started_at": "2026-09-09T03:41:32.790Z",
+      "status": "passed",
+      "before_hash": "f378f0308b5e412b48f37a21b26dfc65efa9af09a30b7b89c54d2d92787cb85d",
+      "config_hash": "a65ffc12b314e904388d7000bc85520faa134977eb150be80286a53161186f0f",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:41:36.692Z"
+    },
+    {
+      "id": "2a03a70e-2cb6-4199-a5b2-c116c04945f7",
+      "task": "orchestrator-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_orchestrator.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 21908,
+      "child_pid": 32456,
+      "started_at": "2026-09-09T03:41:50.101Z",
+      "status": "passed",
+      "before_hash": "f378f0308b5e412b48f37a21b26dfc65efa9af09a30b7b89c54d2d92787cb85d",
+      "config_hash": "1c18456d284e0df196f6e1e023d8e8b154f41b554f4f1ea01d4631aada740d5a",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:41:56.543Z"
+    },
+    {
+      "id": "99daf949-3515-4388-b201-04e0671140e3",
+      "task": "retrieval-layer-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_retrieval.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 14508,
+      "child_pid": 7612,
+      "started_at": "2026-09-09T03:43:50.020Z",
+      "status": "passed",
+      "before_hash": "378b5be58cbc12276a543af4575a117a5269a7a88fc9010bdb33410801d070dd",
+      "config_hash": "5757cf9252eafc70482a7f17aceb52e492d13145db6858b737c230790ff502c9",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:43:55.886Z"
+    },
+    {
+      "id": "276473f3-5582-4f9f-8d1d-b3d32b498f39",
+      "task": "specialist-agents-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_specialist_agents.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 22836,
+      "child_pid": 23044,
+      "started_at": "2026-09-09T03:55:05.219Z",
+      "status": "passed",
+      "before_hash": "1ba899a4fe6a64e4da0bb2dd7743e9176e6da37e7e1132d13eceb3ef37edb769",
+      "config_hash": "158602bd47099e5049399a82c44e302993956ad718b73aa587ae14143a218f40",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:55:11.617Z"
+    },
+    {
+      "id": "b9651615-180c-4cfa-97fe-8ddf097b1ce8",
+      "task": "aggregator-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_aggregator.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 15376,
+      "child_pid": 32456,
+      "started_at": "2026-09-09T03:58:52.152Z",
+      "status": "passed",
+      "before_hash": "429d54e694902ddd7c335c2e509373ce53141f18ba004b09fd5fbb6da5bec02e",
+      "config_hash": "4cf6060137054a36462ecfc81dfbe1d59d16c9556b393af08967969c14599a0d",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T03:58:57.483Z"
+    },
+    {
+      "id": "bec72600-a54f-46f8-83a2-5d8bd2e216ff",
+      "task": "budget-guard-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_budget_guard.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 20212,
+      "child_pid": 24444,
+      "started_at": "2026-09-09T03:59:58.751Z",
+      "status": "passed",
+      "before_hash": "6a09dd6d41a9afb4731c0f5236fdcdfa468caed0dc3bfe0ddd57bd316ddad5f2",
+      "config_hash": "a9696049d03bfa14b0d6580b29bf8ae06f07a52b0243fbd37dd81368d4febcab",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T04:00:05.290Z"
+    },
+    {
+      "id": "35590579-271d-4ab4-9278-6d0ad6e5658b",
+      "task": "budget-guard-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_budget_guard.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 27084,
+      "child_pid": 3224,
+      "started_at": "2026-09-09T04:02:23.949Z",
+      "status": "passed",
+      "before_hash": "cb5eb1a5514aa6b0ac417a71a4b34fdb1127a14f6a9428258436b515ac1d9372",
+      "config_hash": "a9696049d03bfa14b0d6580b29bf8ae06f07a52b0243fbd37dd81368d4febcab",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T04:02:38.725Z"
+    },
+    {
+      "id": "75ff0d3a-b12d-4ad0-ae9b-d3954cf9f1cb",
+      "task": "hitl-gate-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_hitl_gate.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 15188,
+      "child_pid": 23940,
+      "started_at": "2026-09-09T04:04:16.826Z",
+      "status": "passed",
+      "before_hash": "59163d59605d57bf4a4381c6f3fa3524f326f6316f94fcc157a79aa1c0a01829",
+      "config_hash": "1a38d94f255a98647c81412a6f46d6bba46e9787cf506a1c32f36e2fa84a3825",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T04:04:28.079Z"
+    },
+    {
+      "id": "5b0995c7-b6c6-430a-9f43-8f75511f4123",
+      "task": "github-poster-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_github_poster.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 20812,
+      "child_pid": 1800,
+      "started_at": "2026-09-09T04:10:03.372Z",
+      "status": "passed",
+      "before_hash": "e1489ef6cdc440ad2e0f8cf969fca9d8023f4b7e6f6d56a08960c38f1830e431",
+      "config_hash": "625e75d90ce689939a5f0003811101f083cb8d919082e827d045c0a2346c0bb9",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T04:10:11.101Z"
+    },
+    {
+      "id": "ba17b93b-1d68-4be3-a775-b6f827def2f1",
+      "task": "events-log-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_events_log.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 16124,
+      "child_pid": 22352,
+      "started_at": "2026-09-09T04:28:05.002Z",
+      "status": "passed",
+      "before_hash": "a9db54e2b5578483ae9b09689c8e67c5d79a3be938c160d67e061fe995cc49f1",
+      "config_hash": "22a694f0205ced19ea253be6f9fb233333cd8321e958ee1fce8df2261da99a15",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T04:28:21.181Z"
+    },
+    {
+      "id": "465392a2-5e31-49ba-8919-36829a97b020",
+      "task": "dispute-flow-3",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_dispute_flow.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 10052,
+      "child_pid": 5892,
+      "started_at": "2026-09-09T04:29:42.526Z",
+      "status": "passed",
+      "before_hash": "03986a886a84ca756e6b76e27bc61a5c727e3aea3bdee09d616093eeae3572df",
+      "config_hash": "5f5cf40f43161a4e40d54987bd4554df7ffef50094f27455623748506c1bc193",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T04:29:57.545Z"
+    },
+    {
+      "id": "c63ac69e-75eb-47fd-a500-db6ff1154d63",
+      "task": "wire-app",
+      "kind": "gate",
+      "command": "python -m pytest tests/test_end_to_end.py -q",
+      "timeout": 120000,
+      "authorization": null,
+      "pid": 27216,
+      "child_pid": 32584,
+      "started_at": "2026-09-09T06:09:11.615Z",
+      "status": "passed",
+      "before_hash": "2d0c36dd0d16f27b646b6374c8716cd4f8d437e7661dc987ed7aa7471abd3a6b",
+      "config_hash": "80cd4eb24fce70630f9f008a36227a4bfa9a5b9557f43fcadfe88a6be986d333",
+      "environment": {
+        "node": "v24.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "verifier": "358371454f03eb4fdfd3eda3cb1d18cb1dd8fe9445404bb3d3047267b3977eb9",
+        "variables": {}
+      },
+      "cost": null,
+      "stop_reason": null,
+      "ended_at": "2026-09-09T06:09:21.805Z"
+    }
+  ],
+  "authorizations": [],
+  "experiments": [],
+  "incidents": [],
+  "discovery": null,
+  "checkpoint": {
+    "at": "2026-09-09T06:19:18.700Z",
+    "revision": {
+      "commit": "63ea2a08abbf3a66ceaa806f04747bdf369cab6f",
+      "dirty": true,
+      "source_hash": "2d0c36dd0d16f27b646b6374c8716cd4f8d437e7661dc987ed7aa7471abd3a6b"
+    },
+    "active_task": null,
+    "next_action": "Review completed work and choose the next bounded outcome."
+  },
+  "legacy": null
+}

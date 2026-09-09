@@ -1,0 +1,13 @@
+{
+  "task": "webhook-ingress",
+  "gate": "independent-review",
+  "kind": "review",
+  "attempt": "795b8936-9d33-473b-ad75-bf36f4091586",
+  "human": "utsavkumar1283@gmail.com",
+  "reason": "Re-reviewed after scope cleanup (removed requirements.txt/pycache from diff), same implementation, 2026-09-09",
+  "observed_at": "2026-09-09T00:11:02.501Z",
+  "source_hash": "037a14181aa39e634c51da0ded423682d9c88e6cd8a1a1bacb1484ad47b64786",
+  "config_hash": "2810bfed2da0057643b3ee0072f9493bb1e3d1bbd3bfd8e093aa3b5257738efe",
+  "reviewed_proofs": "3b4069b64cead6b2db8fd2b9849c2c71030b45926aa334e56ef5b9207c9c7375",
+  "hash": "77644747d5552b8051e1e821ce5675e7ad275db3462997f8a779f9f8311888d0"
+}
